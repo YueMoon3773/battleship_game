@@ -1,0 +1,73 @@
+/* =============================================== */
+/* BASIC SETUP  */
+/* =============================================== */
+@import url('https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400..700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Sono:wght@200..800&display=swap');
+
+*::after,
+*::before,
+* {
+    box-sizing: border-box;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-size: 62.5%;
+    font-family: 'AR One Sans', 'Roboto+Mono', 'Sono', Arial, Helvetica, sans-serif;
+
+    --black_color: #000;
+    --white_color: #fff;
+    --black_text: #333;
+    --white_text: #f5f5f5;
+    --snow_white_color: #fffafa;
+    --gray_color: #c0c0c0;
+    --light_gray_color: #eeeeee;
+    --dark_gray_color: #808080;
+    --light_green_color: #1bff14;
+    --green_color: #32de84;
+    --dark_green_color: #03c04a;
+    --light_red_color: #f13e23;
+    --red_color: #ff2400;
+    --dark_red_color: #cc0000;
+    --yellow_color: #ffc72c;
+    --light_yellow_color: #ffd700;
+    --dark_yellow_color: #febe10;
+    --blue_color: #00bfff;
+    --light_blue_color: #28c6fb;
+    --dark_blue_color: #add8e6;
+    --soft_dark_blue_color: #b0e0e6;
+}
+
+/* Reset CSS styles for some elements */
+a {
+    text-decoration: none;
+}
+
+ul,
+li {
+    list-style: none;
+}
+
+/* Make SVG elements works with current color */
+svg {
+    font-size: 1rem;
+    height: 3.6rem;
+    aspect-ratio: 1 / 1;
+}
+
+svg path {
+    fill: currentColor;
+}
+
+/* Improve line wrapping + avoid text overflows */
+p {
+  overflow-wrap: break-word;
+  word-break: break-word; 
+  text-wrap: pretty;      
+}
+
+h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+  text-wrap: balance;     
+}
