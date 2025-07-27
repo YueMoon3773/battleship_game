@@ -1,26 +1,30 @@
 {
-    "name": "webpack_template",
+    "name": "battleship_game",
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
         "build": "webpack",
         "dev": "webpack serve",
         "deploy": "git subtree push --prefix dist origin gh-pages",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "jest",
+        "watch": "jest --watch *.js --verbose"
     },
     "repository": {
         "type": "git",
-        "url": "git@github.com-yue:YueMoon3773/webpack_template.git"
+        "url": "git@github.com-yue:YueMoon3773/battleship_game.git"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "description": "",
     "devDependencies": {
+        "@babel/core": "^7.28.0",
+        "@babel/preset-env": "^7.28.0",
+        "babel-jest": "^30.0.5",
         "css-loader": "^7.1.2",
         "html-loader": "^5.1.0",
         "html-webpack-plugin": "^5.6.3",
-        "prettier": "3.6.0",
+        "jest": "^30.0.5",
         "style-loader": "^4.0.0",
         "webpack": "^5.99.9",
         "webpack-cli": "^6.0.1",

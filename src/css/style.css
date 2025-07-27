@@ -1,7 +1,7 @@
 /* =============================================== */
 /* BASIC SETUP  */
 /* =============================================== */
-@import url('https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400..700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Sono:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400..700&family=Jersey+10&family=Orbitron:wght@400..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Sono:wght@200..800&family=Workbench&display=swap');
 
 *::after,
 *::before,
@@ -14,7 +14,8 @@
     margin: 0;
     box-sizing: border-box;
     font-size: 62.5%;
-    font-family: 'AR One Sans', 'Roboto+Mono', 'Sono', Arial, Helvetica, sans-serif;
+    font-family: 'Orbitron', 'AR One Sans', 'Roboto Mono', 'Sono', 'Roboto', Arial, Helvetica, sans-serif, 'Workbench',
+        'Jersey 10';
 
     --black_color: #000;
     --white_color: #fff;
@@ -37,11 +38,19 @@
     --light_blue_color: #28c6fb;
     --dark_blue_color: #add8e6;
     --soft_dark_blue_color: #b0e0e6;
+
+    --big_ele_border_radius: 16px;
+    --small_ele_border_radius: 12px;
+    --ele_black_bg_color: rgba(16, 16, 16, 0.9);
+    --ele_smoke_bg_color: rgba(16, 16, 16, 0.46);
+    --ele_white_bg_color: rgba(236, 236, 236, 0.9);
+    --ele_transition: all 360ms ease-in-out;
 }
 
 /* Reset CSS styles for some elements */
 a {
     text-decoration: none;
+    color: var(--black_text);
 }
 
 ul,
@@ -62,12 +71,461 @@ svg path {
 
 /* Improve line wrapping + avoid text overflows */
 p {
-  overflow-wrap: break-word;
-  word-break: break-word; 
-  text-wrap: pretty;      
+    overflow-wrap: break-word;
+    word-break: break-word;
+    text-wrap: pretty;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  overflow-wrap: break-word;
-  text-wrap: balance;     
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    overflow-wrap: break-word;
+    text-wrap: balance;
+}
+
+/* =============================================== */
+/* BASIC BODY SETUP  */
+/* =============================================== */
+body {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+}
+
+.corner {
+    border: 3px solid var(--snow_white_color);
+    position: absolute;
+}
+
+.top-left {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+}
+
+.top-right {
+    top: 0;
+    right: 0;
+    border-bottom: none;
+    border-left: none;
+}
+
+.bottom-left {
+    bottom: 0;
+    left: 0;
+    border-top: none;
+    border-right: none;
+}
+
+.bottom-right {
+    bottom: 0;
+    right: 0;
+    border-top: none;
+    border-left: none;
+}
+
+/* =============================================== */
+/* BACKGROUND IMAGE SETUP  */
+/* =============================================== */
+.bgImgWrapper {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background-color: #060d1f;
+    filter: brightness(2.36) contrast(1.16);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.bgImg {
+    width: 100%;
+    height: 100%;
+    object-position: center;
+    object-fit: contain;
+    filter: blur(1.5px);
+}
+
+/* =============================================== */
+/* MAIN APP SETUP  */
+/* =============================================== */
+.app {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    height: 100vh;
+    width: 100vw;
+    z-index: 10;
+}
+
+/* =============================================== */
+/* START SCREEN SETUP  */
+/* =============================================== */
+.startScreen.hide {
+    display: none;
+}
+
+.startScreen {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-rows: 10fr 0.55fr;
+
+    z-index: 10;
+    position: relative;
+}
+
+.startBox {
+    place-self: center;
+    background-color: var(--ele_black_bg_color);
+
+    border-radius: var(--big_ele_border_radius);
+    /* border: 2px solid var(--snow_white_color); */
+    position: relative;
+}
+
+.startBoxCorner {
+    font-size: 1rem;
+    width: 4.6em;
+    height: 4.6em;
+    transition: var(--ele_transition);
+}
+
+.startBoxCorner.top-left {
+    border-top-left-radius: var(--big_ele_border_radius);
+}
+
+.startBoxCorner.top-right {
+    border-top-right-radius: var(--big_ele_border_radius);
+}
+
+.startBoxCorner.bottom-left {
+    border-bottom-left-radius: var(--big_ele_border_radius);
+}
+
+.startBoxCorner.bottom-right {
+    border-bottom-right-radius: var(--big_ele_border_radius);
+}
+
+.startBox:hover .startBoxCorner {
+    font-size: 1.6rem;
+    border-width: 4.6px;
+}
+
+.startHelpBtnWrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 1rem;
+    padding: 1.2em;
+    margin: 1.6em;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.startHelpBtnImg {
+    width: 3.6rem;
+    color: var(--snow_white_color);
+    cursor: pointer;
+}
+
+.startHelpBtnImg.full {
+    width: 0;
+}
+
+.startHelpBtnWrapper:hover .startHelpBtnImg.empty {
+    width: 0;
+}
+
+.startHelpBtnWrapper:hover .startHelpBtnImg.full {
+    width: 3.6rem;
+}
+
+.startBoxContent {
+    font-size: 1rem;
+    margin: 2.2em 2.6em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.startTitleWrapper {
+    width: 100%;
+
+    font-size: 1rem;
+    margin-bottom: 6.6em;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.startTitleImg {
+    width: 760px;
+}
+
+.startForm {
+    width: 100%;
+
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.6em;
+}
+
+.startInp {
+    width: clamp(50%, 330px, 76%);
+    font-size: 1.8rem;
+    padding: 0.36em 0.6em;
+    letter-spacing: 0.16em;
+
+    background-color: transparent;
+    outline: none;
+    border: none;
+    border-bottom: 1.5px solid var(--blue_color);
+}
+
+.startInp::placeholder,
+.startInp {
+    color: var(--blue_color);
+    font-weight: 360;
+}
+
+.startBtn {
+    font-weight: 860;
+
+    width: 50%;
+    height: 100px;
+    min-height: 90px;
+    overflow: hidden;
+    cursor: crosshair;
+
+    background-color: transparent;
+    outline: none;
+    border: none;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    position: relative;
+}
+
+.startBtnImg {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+    place-self: center;
+
+    position: absolute;
+    height: 340px;
+    top: -130%;
+    clip-path: inset(0 50% 0 50%); /* Hide img from both sides */
+    transition: var(--ele_transition);
+
+    color: var(--white_color);
+    z-index: 10;
+}
+
+.startBtnText {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+    place-self: center;
+
+    position: absolute;
+    top: 56%;
+
+    font-size: 2.6rem;
+    font-weight: 860;
+    color: var(--white_text);
+    transition: all;
+    transition: var(--ele_transition);
+    z-index: 11;
+}
+
+.startBtn:hover .startBtnImg {
+    clip-path: inset(0 0 0 0); /* Reveal fully svg img */
+}
+
+.startBtn:hover .startBtnText {
+    color: var(--black_text);
+}
+
+.creditWrapper {
+    font-size: 1rem;
+    padding: 0.26em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3.2em;
+    background-color: var(--ele_smoke_bg_color);
+    transition: var(--ele_transition);
+}
+
+.creditWrapper:hover {
+    background-color: var(--ele_black_bg_color);
+}
+
+.usrName {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+}
+
+.usrName,
+.iconPicCredit,
+.creditLink {
+    font-size: 1.6rem;
+    color: var(--white_text);
+    letter-spacing: 0.16em;
+    transition: var(--ele_transition);
+    cursor: default;
+}
+
+.usrName:hover,
+.creditLink:hover {
+    color: var(--white_color);
+    font-weight: 600;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.gitIcon {
+    height: 2.6rem;
+}
+
+.iconPicCredit {
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.86em;
+}
+
+/* =============================================== */
+/* START HELPER SCREEN SETUP  */
+/* =============================================== */
+.startHelpWrapper {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    height: 100vh;
+    width: 100vw;
+
+    background-color: var(--ele_smoke_bg_color);
+    backdrop-filter: blur(14.6px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 20;
+}
+
+.startHelpWrapper.hide {
+    display: none;
+}
+
+.startHelpBox {
+    background-color: var(--ele_white_bg_color);
+    font-size: 1rem;
+    padding: 3.2em 4.6em;
+    max-width: 60%;
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 3.2em;
+}
+
+.helpBoxTitle {
+    font-size: 8.6rem;
+    font-weight: 900;
+    color: var(--black_text);
+    margin: 0;
+    cursor: default;
+}
+
+.helpBoxBody {
+    width: 100%;
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.4em;
+    cursor: default;
+}
+
+.helpBodyPart {
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4em;
+}
+
+.helpBodyTitle {
+    font-size: 2.4rem;
+    font-weight: 600;
+    color: var(--black_text);
+    letter-spacing: 0.06em;
+}
+
+.helpBodyContent {
+    font-size: 2rem;
+    margin-left: 2.4em;
+    color: var(--black_text);
+    max-width: 75ch;
+    letter-spacing: 0.04em;
+}
+
+.startHelpBoxCloseWrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 1rem;
+    padding: 1em;
+    margin: 1em;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.helpBoxCloseBtn {
+    height: 3.2rem;
+    cursor: pointer;
+    color: var(--black_text);
+}
+
+.helpBoxCloseBtn.full {
+    width: 0;
+}
+
+.startHelpBoxCloseWrapper:hover .helpBoxCloseBtn.empty {
+    width: 0;
+}
+
+.startHelpBoxCloseWrapper:hover .helpBoxCloseBtn.full {
+    width: 3.2rem;
+}
+/* =============================================== */
+/* PREPARATION SCREEN SETUP  */
+/* =============================================== */
+.prepScreen {
+}
+
+.gameScreen {
+}
+
+.resultScreen {
 }
