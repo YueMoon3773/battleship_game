@@ -38,6 +38,7 @@
     --dark_blue_color: #add8e6;
     --soft_dark_blue_color: #b0e0e6;
     --primary_color: #4563cf;
+    --light_primary_color: #627ee3;
 
     --big_ele_border_radius: 16px;
     --small_ele_border_radius: 12px;
@@ -50,8 +51,24 @@
     --ele_transition: all 360ms ease-in-out;
 
     --map_cell_line_color: rgba(198, 235, 255, 0.46);
+    --radial_team_map_color_overlay: radial-gradient(
+        circle,
+        rgba(2, 0, 36, 0) 15%,
+        rgba(69, 99, 207, 0.0112780112) 30%,
+        rgba(69, 99, 207, 0.1012780112) 60%,
+        rgba(69, 99, 207, 0.249737395) 86%,
+        rgba(69, 99, 207, 0.699737395) 100%
+    );
+    --radial_enemy_map_color_overlay: radial-gradient(
+        circle,
+        rgba(2, 0, 36, 0) 15%,
+        rgba(233, 101, 81, 0.0112780112) 30%,
+        rgba(233, 101, 81, 0.1012780112) 60%,
+        rgba(233, 101, 81, 0.249737395) 86%,
+        rgba(233, 101, 81, 0.699737395) 100%
+    );
+
     --cell_size: 46px;
-    --cell_size_negative: -52px;
 }
 
 /* Reset CSS styles for some elements */
@@ -147,7 +164,7 @@ h6 {
         color: var(--gray_color);
     }
     to {
-        color: var(--soft_dark_blue_color);
+        color: var(--light_primary_color);
     }
 }
 
@@ -313,12 +330,20 @@ body {
 
     grid-template-columns: repeat(10, var(--cell_size));
     grid-template-rows: repeat(10, var(--cell_size));
-    border: 4.2px solid var(--primary_color);
+
     background-color: transparent;
 
     overflow: hidden;
     position: relative;
     z-index: 20;
+}
+
+.mapGrid.team {
+    border: 4.2px solid var(--primary_color);
+}
+
+.mapGrid.enemy {
+    border: 4.2px solid var(--light_red_color);
 }
 
 /* center map crosshair */
@@ -335,8 +360,17 @@ body {
 .mapCrossHair::after {
     content: '';
     position: absolute;
-    background: var(--green_color);
     z-index: 20;
+}
+
+.mapCrossHair.team::before,
+.mapCrossHair.team::after {
+    background: var(--green_color);
+}
+
+.mapCrossHair.enemy::before,
+.mapCrossHair.enemy::after {
+    background: var(--red_color);
 }
 
 .mapCrossHair::before {
@@ -355,15 +389,23 @@ body {
     transform: translateX(-50%);
 }
 
-.MapWaveGuide {
+.mapWaveGuide {
     height: 50%;
     width: 50%;
     position: absolute;
-    background-image: linear-gradient(236deg, var(--primary_color) 15%, transparent 60%);
-    border-right: 3px solid var(--primary_color);
     transform-origin: bottom right;
     transform: rotate(0deg) skew(45deg, 0);
     animation: spin 6s linear infinite;
+}
+
+.mapWaveGuide.team {
+    background-image: linear-gradient(236deg, var(--primary_color) 15%, transparent 60%);
+    border-right: 3px solid var(--primary_color);
+}
+
+.mapWaveGuide.enemy {
+    background-image: linear-gradient(236deg, var(--light_red_color) 15%, transparent 60%);
+    border-right: 3px solid var(--light_red_color);
 }
 
 .mapField {
@@ -756,117 +798,6 @@ body {
 }
 
 /* =============================================== */
-/* START HELPER SCREEN SETUP  */
-/* =============================================== */
-.startHelpWrapper {
-    grid-column: 1 / 2;
-    grid-row: 1 / 2;
-    height: 100vh;
-    width: 100vw;
-
-    background-color: var(--ele_dark_smoke_bg_color);
-    backdrop-filter: blur(14.6px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: appear 360ms ease-out;
-
-    z-index: 20;
-}
-
-.startHelpWrapper.hide {
-    display: none;
-    animation: vanish 360ms ease-out;
-}
-
-.startHelpBox {
-    background-color: var(--ele_white_bg_color);
-    font-size: 1rem;
-    padding: 3.2em 4.6em;
-    max-width: 60%;
-
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 3em;
-}
-
-.helpBoxTitle {
-    font-size: 8.6rem;
-    font-weight: 900;
-    color: var(--black_text);
-    margin: 0;
-    margin-bottom: 0.2em;
-    cursor: default;
-}
-
-.helpBoxBody {
-    width: 100%;
-    font-size: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2.6em;
-    cursor: default;
-}
-
-.helpBodyPart {
-    font-size: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.4em;
-}
-
-.helpBodyTitle {
-    font-size: 2.4rem;
-    font-weight: 600;
-    color: var(--black_text);
-    letter-spacing: 0.06em;
-}
-
-.helpBodyContent {
-    font-size: 2rem;
-    margin-left: 2.4em;
-    color: var(--black_text);
-    max-width: 75ch;
-    letter-spacing: 0.04em;
-    line-height: 1.4;
-}
-
-.startHelpBoxCloseWrapper {
-    position: absolute;
-    top: 0;
-    right: 0;
-    font-size: 1rem;
-    padding: 1em;
-    margin: 1em;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.helpBoxCloseBtn {
-    height: 3.2rem;
-    cursor: pointer;
-    color: var(--black_text);
-}
-
-.helpBoxCloseBtn.full {
-    width: 0;
-}
-
-.startHelpBoxCloseWrapper:hover .helpBoxCloseBtn.empty {
-    width: 0;
-}
-
-.startHelpBoxCloseWrapper:hover .helpBoxCloseBtn.full {
-    width: 3.2rem;
-}
-/* =============================================== */
 /* PREPARATION SCREEN SETUP  */
 /* =============================================== */
 .prepScreen {
@@ -972,11 +903,11 @@ body {
     margin-bottom: 1em;
 }
 
-.pletterWrapper {
+.pLetterWrapper {
     grid-column: 2 / 3;
 }
 
-.pnumberWrapper {
+.pNumberWrapper {
     grid-column: 1 / 2;
 }
 
@@ -984,6 +915,7 @@ body {
     position: relative;
     height: calc(var(--cell_size) * 10.1);
     width: calc(var(--cell_size) * 10.1);
+    background-image: var(--radial_team_map_color_overlay);
 }
 
 .pMidRight {
@@ -1082,7 +1014,236 @@ body {
 /* GAME PLAY SCREEN SETUP  */
 /* =============================================== */
 .gameScreen {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
 }
 
+.gameWrapper {
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.36em;
+}
+
+.gameScreen.hide {
+    display: none;
+}
+
+.gameSidesWrapper {
+    /* max-height: 576px; */
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2.6em;
+}
+
+.gSideWrapper,
+.gameChatWrapper {
+    font-size: 1rem;
+    padding: 1.6em;
+    background-color: var(--ele_black_bg_color);
+    border-radius: var(--smaller_ele_border_radius);
+    transition: var(--ele_transition);
+}
+
+.gSideWrapper {
+    font-size: 1rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    gap: 1.2em;
+}
+
+.gSideHeading {
+    grid-column: 1 / 3;
+    font-size: 2.6rem;
+    font-weight: 600;
+    margin: 0 auto 0.4em;
+}
+
+.gSideWrapper.team .gSideHeading {
+    color: var(--primary_color);
+}
+
+.gSideWrapper.enemy .gSideHeading {
+    color: var(--red_color);
+}
+
+.gLetterWrapper {
+    grid-column: 2 / 3;
+}
+
+.gNumberWrapper {
+    grid-column: 1 / 2;
+}
+
+.gSideMapWrapper {
+    position: relative;
+    height: calc(var(--cell_size) * 10.1);
+    width: calc(var(--cell_size) * 10.1);
+}
+
+.gameChatWrapper {
+    width: 100%;
+    max-height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2.4em;
+}
+
+.gameChatWrapper.enemy {
+    flex-direction: row-reverse;
+}
+
+.chatImg {
+}
+
+.chatContent {
+    font-size: 2.16rem;
+    letter-spacing: 0.1em;
+    color: var(--white_text);
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: default;
+}
+
+.chatContent.enemyText {
+    font-size: 1.66rem;
+}
+
+/* =============================================== */
+/* HELPER SCREEN SETUP  */
+/* =============================================== */
+/* =============================================== */
+/* START HELPER SETUP  */
+/* =============================================== */
+.helperScreenWrapper {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    height: 100vh;
+    width: 100vw;
+
+    background-color: var(--ele_dark_smoke_bg_color);
+    backdrop-filter: blur(14.6px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: appear 360ms ease-out;
+
+    z-index: 20;
+}
+
+.helperScreenWrapper.hide {
+    display: none;
+    animation: vanish 360ms ease-out;
+}
+
+.startHelpBox {
+    background-color: var(--ele_white_bg_color);
+    font-size: 1rem;
+    padding: 3.2em 4.6em;
+    max-width: 60%;
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 3em;
+}
+
+.daggerImg {
+    position: absolute;
+    top: -16%;
+    left: 32%;
+    aspect-ratio: 1 / 1;
+    transform: rotate(10deg);
+    height: 240px;
+}
+
+.helpBoxTitle {
+    font-size: 8.6rem;
+    font-weight: 900;
+    color: var(--black_text);
+    margin: 0;
+    /* margin-bottom: 0.1em; */
+    cursor: default;
+}
+
+.helpBoxBody {
+    width: 100%;
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.6em;
+    cursor: default;
+}
+
+.helpBodyPart {
+    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4em;
+}
+
+.helpBodyTitle {
+    font-size: 2.4rem;
+    font-weight: 600;
+    color: var(--black_text);
+    letter-spacing: 0.06em;
+}
+
+.helpBodyContent {
+    font-size: 2rem;
+    margin-left: 2.4em;
+    color: var(--black_text);
+    max-width: 75ch;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+}
+
+.startHelpBoxCloseWrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 1rem;
+    padding: 1em;
+    margin: 1em;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.helpBoxCloseBtn {
+    height: 3.2rem;
+    cursor: pointer;
+    color: var(--black_text);
+}
+
+.helpBoxCloseBtn.full {
+    width: 0;
+}
+
+.startHelpBoxCloseWrapper:hover .helpBoxCloseBtn.empty {
+    width: 0;
+}
+
+.startHelpBoxCloseWrapper:hover .helpBoxCloseBtn.full {
+    width: 3.2rem;
+}
+
+/* =============================================== */
+/* RESULT HELPER SETUP  */
+/* =============================================== */
 .resultScreen {
 }
