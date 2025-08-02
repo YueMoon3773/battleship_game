@@ -1,12 +1,47 @@
-const shipsOverlay = () => {
+const svgAttributesHandler = (shipSize, shipColPos = 0, shipRowPos = 0, shipIsVertical = false) => {
+    let verticalClass = '';
+    let gridRow = `${shipRowPos} / ${shipRowPos + 1}`;
+    let gridCol = `${shipColPos} / ${shipColPos + shipSize}`;
+
+    if (shipIsVertical === true) {
+        verticalClass = 'vertical';
+        gridRow = `${shipRowPos} / ${shipRowPos + shipSize}`;
+        gridCol = `${shipColPos} / ${shipColPos + 1}`;
+    }
+
+    return {
+        verticalClass,
+        gridCol,
+        gridRow,
+    };
+};
+
+// const { verticalClass, gridCol, gridRow } = svgAttributesHandler(5, 1, 1, false);
+// const { verticalClass, gridCol, gridRow } = svgAttributesHandler(5, 10, 2, true);
+// console.log(verticalClass);
+// console.log(gridCol);
+// console.log(gridRow);
+
+const shipsSvgOverlay = () => {
     /**
      *
-     * @param {string} shipColPos - grid column, Ex: 3 / 4
-     * @param {string} shipRowPos - grid row, Ex: 3 / 8
-     * @param {string} shipInVertical - vertical class, Ex: vertical
+     * @param {number} shipColPos - grid column, Ex: 3; 4
+     * @param {number} shipRowPos - grid row, Ex: 3; 8
+     * @param {boolean} shipIsVertical - is ship in vertical state
      * @returns svg element to insertAdjacentHTML
      */
-    const carrierImg = (shipColPos = '', shipRowPos = '', shipInVertical = '') => {
+    const carrierImg = (shipColPos = 0, shipRowPos = 0, shipIsVertical = false) => {
+        const shipSize = 5;
+        const { verticalClass, gridCol, gridRow } = svgAttributesHandler(
+            shipSize,
+            shipColPos,
+            shipRowPos,
+            shipIsVertical,
+        );
+        console.log(verticalClass);
+        console.log(gridCol);
+        console.log(gridRow);
+
         const svgElement = `
         <svg
             version="1.0"
@@ -15,8 +50,8 @@ const shipsOverlay = () => {
             height="95.000000pt"
             viewBox="0 0 299.000000 95.000000"
             preserveAspectRatio="none"
-            class="shipOverlay carrierImg ${shipInVertical}"
-            style="grid-column: ${shipColPos}; grid-row: ${shipRowPos};"
+            class="shipOverlay carrierImg ${verticalClass}"
+            style="grid-column: ${gridCol}; grid-row: ${gridRow};"
         >
             <metadata>
                 Created by potrace 1.16, written by Peter Selinger 2001-2019
@@ -35,7 +70,14 @@ const shipsOverlay = () => {
         return svgElement;
     };
 
-    const battleshipImg = (shipColPos = '', shipRowPos = '', shipInVertical = '') => {
+    const battleshipImg = (shipColPos = 0, shipRowPos = 0, shipIsVertical = false) => {
+        const shipSize = 4;
+        const { verticalClass, gridCol, gridRow } = svgAttributesHandler(
+            shipSize,
+            shipColPos,
+            shipRowPos,
+            shipIsVertical,
+        );
         const svgElement = `
         <svg
             version="1.0"
@@ -44,8 +86,8 @@ const shipsOverlay = () => {
             height="95.000000pt"
             viewBox="0 0 299.000000 95.000000"
             preserveAspectRatio="none"
-            class="shipOverlay battleshipImg ${shipInVertical}"
-            style="grid-column: ${shipColPos}; grid-row: ${shipRowPos};"
+            class="shipOverlay battleshipImg ${verticalClass}"
+            style="grid-column: ${gridCol}; grid-row: ${gridRow};"
         >
             <metadata>
                 Created by potrace 1.16, written by Peter Selinger 2001-2019
@@ -59,7 +101,14 @@ const shipsOverlay = () => {
         return svgElement;
     };
 
-    const destroyerImg = (shipColPos = '', shipRowPos = '', shipInVertical = '') => {
+    const destroyerImg = (shipColPos = 0, shipRowPos = 0, shipIsVertical = false) => {
+        const shipSize = 3;
+        const { verticalClass, gridCol, gridRow } = svgAttributesHandler(
+            shipSize,
+            shipColPos,
+            shipRowPos,
+            shipIsVertical,
+        );
         const svgElement = `
         <svg
             version="1.0"
@@ -68,8 +117,8 @@ const shipsOverlay = () => {
             height="69.000000pt"
             viewBox="0 0 153.000000 69.000000"
             preserveAspectRatio="none"
-            class="shipOverlay destroyerImg ${shipInVertical}"
-            style="grid-column: ${shipColPos}; grid-row: ${shipRowPos};"
+            class="shipOverlay destroyerImg ${verticalClass}"
+            style="grid-column: ${gridCol}; grid-row: ${gridRow};"
         >
             <metadata>
                 Created by potrace 1.16, written by Peter Selinger 2001-2019
@@ -88,7 +137,14 @@ const shipsOverlay = () => {
         return svgElement;
     };
 
-    const submarineImg = (shipColPos = '', shipRowPos = '', shipInVertical = '') => {
+    const submarineImg = (shipColPos = 0, shipRowPos = 0, shipIsVertical = false) => {
+        const shipSize = 3;
+        const { verticalClass, gridCol, gridRow } = svgAttributesHandler(
+            shipSize,
+            shipColPos,
+            shipRowPos,
+            shipIsVertical,
+        );
         const svgElement = `
         <svg
             version="1.0"
@@ -97,8 +153,8 @@ const shipsOverlay = () => {
             height="98.000000pt"
             viewBox="0 0 302.000000 98.000000"
             preserveAspectRatio="none"
-            class="shipOverlay submarineImg ${shipInVertical}"
-            style="grid-column: ${shipColPos}; grid-row: ${shipRowPos};"
+            class="shipOverlay submarineImg ${verticalClass}"
+            style="grid-column: ${gridCol}; grid-row: ${gridRow};"
         >
             <metadata>
                 Created by potrace 1.16, written by Peter Selinger 2001-2019
@@ -117,7 +173,14 @@ const shipsOverlay = () => {
         return svgElement;
     };
 
-    const cruiserImg = (shipColPos = '', shipRowPos = '', shipInVertical = '') => {
+    const cruiserImg = (shipColPos = 0, shipRowPos = 0, shipIsVertical = false) => {
+        const shipSize = 2;
+        const { verticalClass, gridCol, gridRow } = svgAttributesHandler(
+            shipSize,
+            shipColPos,
+            shipRowPos,
+            shipIsVertical,
+        );
         const svgElement = `
         <svg
             version="1.0"
@@ -126,8 +189,8 @@ const shipsOverlay = () => {
             height="60.000000pt"
             viewBox="0 0 112.000000 60.000000"
             preserveAspectRatio="none"
-            class="shipOverlay cruiserImg ${shipInVertical}"
-            style="grid-column: ${shipColPos}; grid-row: ${shipRowPos};"
+            class="shipOverlay cruiserImg ${verticalClass}"
+            style="grid-column: ${gridCol}; grid-row: ${gridRow};"
         >
             <metadata>
                 Created by potrace 1.16, written by Peter Selinger 2001-2019
@@ -155,4 +218,4 @@ const shipsOverlay = () => {
     };
 };
 
-export default shipsOverlay;
+export default shipsSvgOverlay;

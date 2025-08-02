@@ -46,25 +46,25 @@ const htmlElements = () => {
         return mapWaveGuide;
     };
 
-    const mapFieldElement = (fieldPos, fieldDisability) => {
-        if (fieldPos === '') {
-            throw new Error('Cannot add map field without filed position!');
+    const mapCellElement = (cellPos, cellDisability) => {
+        if (cellPos === '') {
+            throw new Error('Cannot add map cell without filed position!');
         }
-        const mapField = document.createElement('div');
-        mapField.classList.add('mapField');
-        if (fieldDisability === true) {
-            mapField.classList.add('disable');
+        const mapCell = document.createElement('div');
+        mapCell.classList.add('mapCell');
+        if (cellDisability === true) {
+            mapCell.classList.add('disable');
         }
-        mapField.dataset.fieldPos = fieldPos;
+        mapCell.dataset.cellPos = cellPos;
 
-        return mapField;
+        return mapCell;
     };
 
     return {
         mapDot,
         mapCrossHairElement,
         mapWaveGuideElement,
-        mapFieldElement,
+        mapCellElement,
     };
 };
 

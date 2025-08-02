@@ -57,7 +57,7 @@
         rgba(69, 99, 207, 0.0112780112) 30%,
         rgba(69, 99, 207, 0.1012780112) 60%,
         rgba(69, 99, 207, 0.249737395) 86%,
-        rgba(69, 99, 207, 0.699737395) 100%
+        rgba(69, 99, 207, 0.699737395) 98%
     );
     --radial_enemy_map_color_overlay: radial-gradient(
         circle,
@@ -65,7 +65,7 @@
         rgba(233, 101, 81, 0.0112780112) 30%,
         rgba(233, 101, 81, 0.1012780112) 60%,
         rgba(233, 101, 81, 0.249737395) 86%,
-        rgba(233, 101, 81, 0.699737395) 100%
+        rgba(233, 101, 81, 0.699737395) 98%
     );
 
     --cell_size: 46px;
@@ -418,7 +418,7 @@ body {
     border-right: 3px solid var(--light_red_color);
 }
 
-.mapField {
+.mapCell {
     height: var(--cell_size);
     width: var(--cell_size);
 
@@ -432,18 +432,18 @@ body {
     z-index: 15;
 }
 
-.mapField:hover {
+.mapCell:hover {
     background-color: var(--ele_light_white_bg_color);
     cursor: crosshair;
 }
 
-.mapField.disable,
-.mapGrid.team .mapField {
+.mapCell.disable,
+.mapGrid.team .mapCell {
     cursor: not-allowed;
 }
 
-.mapField.disable:hover,
-.mapGrid.team .mapField:hover {
+.mapCell.disable:hover,
+.mapGrid.team .mapCell:hover {
     background-color: transparent;
 }
 
