@@ -51,6 +51,10 @@
     --ele_transition: all 360ms ease-in-out;
 
     --map_cell_line_color: rgba(198, 235, 255, 0.46);
+    --map_cell_white_bg_color: rgba(196, 196, 196, 0.66);
+    --map_cell_red_bg_color: rgba(244, 111, 111, 0.66);
+    --map_cell_green_bg_color: rgba(139, 251, 131, 0.66);
+
     --radial_team_map_color_overlay: radial-gradient(
         circle,
         rgba(2, 0, 36, 0) 15%,
@@ -254,6 +258,7 @@ body {
     border: 3px solid transparent;
     border-radius: 4px;
     position: relative;
+    transition: var(--ele_transition);
     cursor: pointer;
 }
 
@@ -265,6 +270,19 @@ body {
     height: 26%;
     width: 10%;
     transition: var(--ele_transition);
+}
+
+.gameBtn.disabled {
+    cursor: not-allowed;
+    color: var(--dark_gray_color);
+    background-color: transparent;
+    opacity: 0.6;
+}
+
+.gameBtn.disabled .gameBtnCorner {
+    border-color: var(--dark_gray_color);
+    height: 26% !important;
+    width: 10% !important;
 }
 
 .gameBtnCorner.top-right,
@@ -433,13 +451,22 @@ body {
 }
 
 .mapCell:hover {
-    background-color: var(--ele_light_white_bg_color);
+    background-color: var(--map_cell_white_bg_color);
     cursor: crosshair;
+}
+
+.mapCell.red:hover {
+    background-color: var(--map_cell_red_bg_color);
+}
+
+.mapCell.green:hover {
+    background-color: var(--map_cell_green_bg_color);
 }
 
 .mapCell.disable,
 .mapGrid.team .mapCell {
     cursor: not-allowed;
+    background-color: transparent;
 }
 
 .mapCell.disable:hover,
@@ -928,6 +955,15 @@ body {
     margin-bottom: 1em;
 }
 
+.pMidDirections .gameBtn.active {
+    background-color: var(--ele_light_white_bg_color);
+}
+
+.pMidDirections .gameBtn.active:hover {
+    background-color: var(--dark_gray_color);
+    color: var(--white_color);
+}
+
 .pLetterWrapper {
     grid-column: 2 / 3;
 }
@@ -972,12 +1008,8 @@ body {
 .shipCardCorner {
     height: 16%;
     width: 16%;
+    border-color: var(--dark_gray_color);
     transition: var(--ele_transition);
-}
-
-.shipCard:hover .shipCardCorner {
-    height: 30%;
-    width: 30%;
 }
 
 .shipCardContent {
@@ -992,13 +1024,14 @@ body {
 .shipCardImg {
     width: 80px;
     aspect-ratio: 1 / 1;
-    color: var(--gray_color);
+    color: var(--dark_gray_color);
 }
 
 .cardText,
 .cardTextSize {
     font-size: 1.1rem;
-    color: var(--white_text);
+    font-weight: 460;
+    color: var(--dark_gray_color);
     transition: var(--ele_transition);
 }
 
@@ -1014,10 +1047,21 @@ body {
     display: block;
 }
 
+.shipCard:hover .shipCardCorner {
+    height: 30%;
+    width: 30%;
+    border-color: var(--snow_white_color);
+}
+
+.shipCard:hover .shipCardImg,
 .shipCard:hover .cardText,
 .shipCard:hover .cardTextSize {
-    color: var(--white_color);
-    font-weight: 600;
+    color: var(--snow_white_color);
+    font-weight: 660;
+}
+
+.shipCard.dragging {
+    opacity: 0.36;
 }
 
 .prepBot {

@@ -5,7 +5,7 @@
  * @returns
  */
 const mapGrid = (mapType, teamSide) => {
-    if (!mapType || !teamSide) {
+    if (mapType === undefined || teamSide === undefined) {
         throw new Error('missing input mapType or teamSide');
     }
     if (typeof teamSide !== 'string' || typeof teamSide !== 'string') {
@@ -32,17 +32,23 @@ const mapGrid = (mapType, teamSide) => {
             }
         }
         // console.log(mapGrid);
-        // return mapGrid;
     };
 
-    const findCellIndexesInMap = (cellId) => {
-        let targetCellRow = 0;
-        let targetCellCol = 0;
+    const findCellIndexesInMapById = (cellId) => {
+        if (cellId === undefined) {
+            throw new Error('Missing cell id');
+        } else if (typeof cellId !== 'string') {
+            throw new TypeError('Cell id must be a string');
+        }
+        let targetCellRow = -99;
+        let targetCellCol = -99;
         let foundCell = false;
 
-        for (targetCellRow; targetCellRow < map.mapRows; targetCellRow++) {
-            for (targetCellCol; targetCellCol < map.mapCols; targetCellCol++) {
-                if (getMapGrid()[targetCellRow][targetCellCol].getCell().id === cellId) {
+        for (let i = 0; i < map.mapRows; i++) {
+            for (let j = 0; j < map.mapCols; j++) {
+                if (getMapGrid()[i][j].getCell().id === cellId) {
+                    targetCellRow = i;
+                    targetCellCol = j;
                     foundCell = true;
                     break;
                 }
@@ -55,31 +61,41 @@ const mapGrid = (mapType, teamSide) => {
         // console.log({ targetCellRow });
         // console.log({ targetCellCol });
 
-        return {
-            targetCellRow,
-            targetCellCol,
-        };
+        return foundCell === true && targetCellRow !== -99 && targetCellCol !== -99
+            ? {
+                  targetCellRow,
+                  targetCellCol,
+              }
+            : null;
     };
 
     const addFiredCellInMap = (cellId) => {
+        if (cellId === undefined) {
+            throw new Error('Missing cell id');
+        } else if (typeof cellId !== 'string') {
+            throw new TypeError('Cell id must be a string');
+        }
         map.mapCellsFired.add(cellId);
     };
 
     const removeSafeCellInMap = (cellId) => {
+        if (cellId === undefined) {
+            throw new Error('Missing cell id');
+        } else if (typeof cellId !== 'string') {
+            throw new TypeError('Cell id must be a string');
+        }
         map.mapCellsSafe.delete(cellId);
     };
 
-    const getCellInfoById = (cellId) => {
-        const { targetCellRow, targetCellCol } = findCellIndexesInMap(cellId);
-
-        return getMapGrid()[targetCellRow][targetCellCol].getCell();
-    };
-
     const updateFiredCellInMap = (cellId) => {
-        if (!cellId || getFiredCells().has(cellId)) {
+        if (cellId === undefined) {
+            throw new Error('Missing cell id');
+        } else if (typeof cellId !== 'string') {
+            throw new TypeError('Cell id must be a string');
+        } else if (findCellIndexesInMapById(cellId) === null || getFiredCells().has(cellId)) {
             return;
         } else {
-            const { targetCellRow, targetCellCol } = findCellIndexesInMap(cellId);
+            const { targetCellRow, targetCellCol } = findCellIndexesInMapById(cellId);
 
             getMapGrid()[targetCellRow][targetCellCol].toggleCellIsFired();
             addFiredCellInMap(cellId);
@@ -87,24 +103,150 @@ const mapGrid = (mapType, teamSide) => {
         }
     };
 
+    const getCellInfoById = (cellId) => {
+        if (cellId === undefined) {
+            throw new Error('Missing cell id');
+        } else if (typeof cellId !== 'string') {
+            throw new TypeError('Cell id must be a string');
+        } else if (findCellIndexesInMapById(cellId) === null) {
+            return null;
+        }
+
+        const { targetCellRow, targetCellCol } = findCellIndexesInMapById(cellId);
+
+        return getMapGrid()[targetCellRow][targetCellCol].getCell();
+    };
+
+    const isCellOnMap = (cellId) => {
+        if (cellId === undefined) {
+            throw new Error('Missing cell id');
+        } else if (typeof cellId !== 'string') {
+            throw new TypeError('Cell id must be a string');
+        } else if (getCellInfoById(cellId) === null) {
+            return false;
+        }
+        const { mapRows, mapCols } = getMap();
+        const cellRow = getCellInfoById(cellId).row;
+        const cellCol = getCellInfoById(cellId).col;
+
+        return cellRow <= mapRows && cellCol <= mapCols;
+    };
+
     const getMap = () => map;
     const getMapGrid = () => map.mapGrid;
     const getSafeCells = () => map.mapCellsSafe;
     const getFiredCells = () => map.mapCellsFired;
 
+    const getShipHorizontalCells = (cellId, shipSize) => {
+        if (cellId === undefined || shipSize === undefined) {
+            throw new Error('Missing cell id or ship size');
+        } else if (typeof cellId !== 'string' || typeof shipSize !== 'number') {
+            throw new TypeError('Cell id must be a string');
+        } else if (findCellIndexesInMapById(cellId) === null) {
+            return null;
+        } else {
+            const horizontalCellList = [];
+            const { targetCellRow: startRow, targetCellCol: startCol } = findCellIndexesInMapById(cellId);
+
+            let endRow = startRow;
+            let endCol = startCol + shipSize;
+            let checkCellId = `R,${endRow + 1},C,${endCol}`;
+
+            const checkEndCellId = isCellOnMap(checkCellId);
+
+            if (checkEndCellId) {
+                for (let i = startCol + 1; i <= endCol; i++) {
+                    horizontalCellList.push(`R,${endRow + 1},C,${i}`);
+                }
+            } else {
+                for (let i = startCol + 1; i <= 10; i++) {
+                    horizontalCellList.push(`R,${endRow + 1},C,${i}`);
+                }
+            }
+            // console.log({ startRow, startCol, endRow, endCol });
+            // console.log({ cellId, checkCellId });
+            // console.log({ checkEndCellId });
+            // console.log(horizontalCellList);
+
+            return checkEndCellId
+                ? {
+                      shipOnMap: true,
+                      horizontalCellList,
+                      shipRowStartPos: startRow + 1,
+                      shipColStartPos: startCol + 1,
+                  }
+                : {
+                      shipOnMap: false,
+                      horizontalCellList,
+                      shipRowStartPos: startRow + 1,
+                      shipColStartPos: startCol + 1,
+                  };
+        }
+    };
+
+    const getShipVerticalCells = (cellId, shipSize) => {
+        if (cellId === undefined || shipSize === undefined) {
+            throw new Error('Missing cell id or ship size');
+        } else if (typeof cellId !== 'string' || typeof shipSize !== 'number') {
+            throw new TypeError('Cell id must be a string');
+        } else if (findCellIndexesInMapById(cellId) === null) {
+            return null;
+        } else {
+            const verticalCellList = [];
+            const { targetCellRow: startRow, targetCellCol: startCol } = findCellIndexesInMapById(cellId);
+
+            let endRow = startRow + shipSize;
+            let endCol = startCol;
+            let checkCellId = `R,${endRow},C,${endCol + 1}`;
+
+            const checkEndCellId = isCellOnMap(checkCellId);
+
+            if (checkEndCellId) {
+                for (let i = startRow + 1; i <= endRow; i++) {
+                    verticalCellList.push(`R,${i},C,${endCol + 1}`);
+                }
+            } else {
+                for (let i = startRow + 1; i <= 10; i++) {
+                    verticalCellList.push(`R,${i},C,${endCol + 1}`);
+                }
+            }
+            // console.log({ startRow, startCol, endRow, endCol });
+            // console.log({ cellId, checkCellId });
+            // console.log({ checkEndCellId });
+            // console.log(verticalCellList);
+
+            return checkEndCellId
+                ? {
+                      shipOnMap: true,
+                      verticalCellList,
+                      shipRowStartPos: startRow + 1,
+                      shipColStartPos: startCol + 1,
+                  }
+                : {
+                      shipOnMap: false,
+                      verticalCellList,
+                      shipRowStartPos: startRow + 1,
+                      shipColStartPos: startCol + 1,
+                  };
+        }
+    };
+
     return {
         buildMapGrid,
+        updateFiredCellInMap,
         getMap,
         getMapGrid,
         getCellInfoById,
         getSafeCells,
         getFiredCells,
-        updateFiredCellInMap,
+        isCellOnMap,
+        getShipHorizontalCells,
+        getShipVerticalCells,
     };
 };
 
 const mapCell = (row, col) => {
-    if (!row || !col) {
+    if (row === undefined || col == undefined) {
         throw new Error('missing input row or col');
     }
     if (typeof row !== 'number' || typeof col !== 'number' || row < 0 || row > 10 || col < 0 || col > 10) {
@@ -161,34 +303,97 @@ const mapCell = (row, col) => {
 };
 
 const shipList = () => {
-    const shipTypeList = { carrier: 5, battleship: 4, destroyer: 3, submarine: 3, cruiser: 2 };
-};
+    const shipsInfoList = [
+        {
+            shipType: 'carrier',
+            shipSize: 5,
+        },
+        {
+            shipType: 'battleship',
+            shipSize: 4,
+        },
+        {
+            shipType: 'destroyer',
+            shipSize: 3,
+        },
+        {
+            shipType: 'submarine',
+            shipSize: 3,
+        },
+        {
+            shipType: 'cruiser',
+            shipSize: 2,
+        },
+    ];
 
-const shipOverlay = (shipType, shipSize) => {
-    if (!shipType || !shipSize) {
-        throw new Error('missing input row or shipSize');
-    }
-    if (typeof shipType !== 'string') {
-        throw new Error('input ship type must be a string');
-    } else if (typeof shipSize === 'number') {
-        throw new Error('input ship size must be a number');
-    }
+    const shipList = [];
 
-    let ship = {
-        shipType,
-        shipSize,
-        isVertical: false,
-        shipColStartPos: 0,
-        shipRowStartPos: 0,
+    const createShipOverlay = (shipType, shipSize) => {
+        if (shipType === undefined || shipSize === undefined) {
+            throw new Error('missing input row or shipSize');
+        }
+        if (typeof shipType !== 'string') {
+            throw new Error('input ship type must be a string');
+        } else if (typeof shipSize !== 'number') {
+            throw new Error('input ship size must be a number');
+        }
+
+        return {
+            shipType,
+            shipSize,
+            isVertical: false,
+            shipColStartPos: 0,
+            shipRowStartPos: 0,
+        };
     };
 
-    const getShipOverlay = () => ship;
+    const createShipList = () => {
+        shipsInfoList.forEach((shipInfo) => {
+            shipList.push(createShipOverlay(shipInfo.shipType, shipInfo.shipSize));
+        });
+    };
 
-    const toggleShipIsVertical = () => {
+    const getShipList = () => shipList;
+
+    const getShipIndexInListByType = (shipType) => {
+        if (!shipType) {
+            throw new Error('missing input row or shipSize');
+        }
+        if (typeof shipType !== 'string') {
+            throw new Error('input ship type must be a string');
+        }
+
+        let shipIndex = -99;
+        shipList.find((ship, index) => {
+            if (ship.shipType === shipType) {
+                shipIndex = index;
+            }
+        });
+        return shipIndex;
+    };
+
+    const getShipInfoByType = (shipType) => {
+        const shipIndex = getShipIndexInListByType(shipType);
+        if (shipIndex === -99) {
+            return null;
+        }
+        return getShipList()[shipIndex];
+    };
+
+    return {
+        createShipList,
+        getShipList,
+        getShipIndexInListByType,
+        getShipInfoByType,
+    };
+};
+
+const shipOverlayHelper = () => {
+    const toggleShipIsVertical = (ship) => {
         ship.isVertical = !ship.isVertical;
     };
 
-    const updateShipStartCol = (newShipStartColPos) => {
+    const updateShipStartCol = (ship, newShipStartColPos) => {
         if (typeof newShipStartColPos === 'number') {
             ship.shipColStartPos = newShipStartColPos;
         } else {
@@ -196,7 +401,7 @@ const shipOverlay = (shipType, shipSize) => {
         }
     };
 
-    const updateShipStartRow = (newShipStartRowPos) => {
+    const updateShipStartRow = (ship, newShipStartRowPos) => {
         if (typeof newShipStartRowPos === 'number') {
             ship.shipRowStartPos = newShipStartRowPos;
         } else {
@@ -204,7 +409,26 @@ const shipOverlay = (shipType, shipSize) => {
         }
     };
 
-    return { getShipOverlay };
+    return {
+        toggleShipIsVertical,
+        updateShipStartCol,
+        updateShipStartRow,
+    };
 };
 
-export { mapGrid, mapCell, shipOverlay };
+// MAP CHECK
+// in index file
+
+// SHIP CHECK
+const test = shipList();
+test.createShipList();
+console.log(test.getShipList());
+
+// shipOverlayHelper().toggleShipIsVertical(test.getShipList()[0]);
+// console.log(test.getShipList());
+
+// console.log(test.getShipIndexInListByType('submarine'));
+console.log(test.getShipInfoByType('submarine'));
+
+// /========================
+export { mapGrid, mapCell, shipList, shipOverlayHelper };

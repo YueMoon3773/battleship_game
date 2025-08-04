@@ -6,12 +6,12 @@ describe('Map cell test suite', () => {
     });
 
     it('Func must return an object', () => {
-        const retVar = mapCell();
+        const retVar = mapCell(1, 1);
         expect(typeof retVar).toBe('object');
     });
 
     it('Func getMapCell must return an object with 8 child ("row", "col", "id", "isFired", "isHasShip", "isDisabled", teamSide", "shipType")', () => {
-        const retVar = mapCell().getCell();
+        const retVar = mapCell(1, 1).getCell();
 
         expect(typeof retVar).toBe('object');
         expect(Object.keys(retVar)).toHaveLength(8);

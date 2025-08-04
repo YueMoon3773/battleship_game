@@ -63,28 +63,70 @@ import htmlElements from './elementsToDom/elementAddToHtml';
 import shipsSvgOverlay from './elementsToDom/shipsOverlayElement';
 import domHelper from './dom/domHelper';
 
-// for (let row = 1; row < 11; row++) {
-//     for (let col = 1; col < 11; col++) {
-//         let gridID = `R,${row},C,${col}`;
-//         const mapCell = htmlElements().mapCellElement(gridID, false);
-//         domHelper().appendDomEle(prepMapGrid, mapCell);
-//     }
-// }
+for (let row = 1; row < 11; row++) {
+    for (let col = 1; col < 11; col++) {
+        let gridID = `R,${row},C,${col}`;
+        const mapCell = htmlElements().mapCellElement(gridID, false);
+        domHelper().appendDomEle(prepMapGrid, mapCell);
+    }
+}
 
 // const prepCarrierImg = shipsSvgOverlay().carrierImg(10, 2, true);
 // const prepCarrierImg = shipsSvgOverlay().carrierImg(1, 1, false);
 // domHelper().insertDomEle(prepMapShipsOverlay, prepCarrierImg);
 
 // ==============================
-import { mapGrid, mapCell, shipOverlay } from './factories/mapComponents';
+import { mapGrid, mapCell, shipOverlayHelper } from './factories/mapComponents';
 
-// const grid = mapGrid();
-// grid.buildMapGrid();
-// const map = grid.getMapGrid();
+const grid = mapGrid('prep', 'team');
+grid.buildMapGrid();
+const map = grid.getMapGrid();
 // console.log('map: ', map);
 // console.log('map cell: ', map[0][0].getCell());
+
 // console.log('safe cells list before: ', grid.getSafeCells());
 // console.log('fired cells list before: ', grid.getFiredCells());
 // grid.updateFiredCellInMap('R,1,C,2');
 // console.log('safe cells list after: ', grid.getSafeCells());
 // console.log('fired cells list after: ', grid.getFiredCells());
+
+// console.log('cell info at: ', grid.getCellInfoById('R,1,C,2'));
+// console.log('is cell on map: ', grid.isCellOnMap('R,1,C,11'));
+
+// console.log('horizontal test1');
+// console.log('ship cell on map?: ', grid.getShipHorizontalCells('R,10,C,4', 5));
+// console.log('horizontal test2');
+// console.log('ship cell on map?: ', grid.getShipHorizontalCells('R,1,C,10', 2));
+
+// console.log('vertical test1');
+// console.log('ship cell on map?: ', grid.getShipVerticalCells('R,10,C,4', 5));
+// console.log('vertical test2');
+// console.log('ship cell on map?: ', grid.getShipVerticalCells('R,1,C,6', 5));
+
+// ===============================
+// 1) when drag starts you can stash which ship was picked up
+// document.querySelectorAll('.shipCard').forEach((card) => {
+//     card.addEventListener('dragstart', (e) => {
+//         e.dataTransfer.setData('text/plain', card.id);
+//     });
+// });
+
+// // 2) on every grid cell, listen for dragover / drop
+// document.querySelectorAll('.prepScreen .mapCell').forEach((cell) => {
+//     cell.addEventListener('dragenter', (e) => {
+//         e.preventDefault(); // allow drop
+//         cell.classList.add('red'); // highlight
+//         // e.target is your cell
+//         console.log('on cell', cell.dataset.cellPos);
+//     });
+//     cell.addEventListener('dragleave', () => {
+//         cell.classList.remove('red');
+//     });
+//     cell.addEventListener('drop', (e) => {
+//         e.preventDefault();
+//         cell.classList.remove('red');
+//         const shipId = e.dataTransfer.getData('text/plain');
+//         console.log('Dropped ship', shipId, 'on cell', cell.dataset.cellPos);
+//         // do your placement logic…
+//     });
+// });
