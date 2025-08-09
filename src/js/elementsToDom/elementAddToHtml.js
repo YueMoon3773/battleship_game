@@ -1,3 +1,5 @@
+import domDisplay from '../dom/domDisplayHandler';
+
 const htmlElements = () => {
     /**
      *
@@ -18,52 +20,27 @@ const htmlElements = () => {
 
     /**
      *
-     * @param {string} teamSide - team / enemy
+     * @param {string} cell_pos - cell position id
+     * @param {boolean} cellDisability - true: add disable class- red/blue
      * @returns
      */
-    const mapCrossHairElement = (teamSide) => {
-        const mapCrossHair = document.createElement('div');
-        mapCrossHair.classList.add('mapCrossHair');
-        if (teamSide !== '') {
-            mapCrossHair.classList.add(`${teamSide}`);
-        }
-
-        return mapCrossHair;
-    };
-
-    /**
-     *
-     * @param {string} teamSide - team / enemy
-     * @returns
-     */
-    const mapWaveGuideElement = (teamSide) => {
-        const mapWaveGuide = document.createElement('div');
-        mapWaveGuide.classList.add('mapWaveGuide');
-        if (teamSide !== '') {
-            mapWaveGuide.classList.add(`${teamSide}`);
-        }
-
-        return mapWaveGuide;
-    };
-
-    const mapCellElement = (cellPos, cellDisability) => {
-        if (cellPos === '') {
+    const mapCellElement = (cell_pos, cellDisability = false) => {
+        if (cell_pos === '') {
             throw new Error('Cannot add map cell without filed position!');
         }
+
         const mapCell = document.createElement('div');
         mapCell.classList.add('mapCell');
         if (cellDisability === true) {
             mapCell.classList.add('disable');
         }
-        mapCell.dataset.cellPos = cellPos;
+        mapCell.dataset.cell_pos = cell_pos;
 
         return mapCell;
     };
 
     return {
         mapDot,
-        mapCrossHairElement,
-        mapWaveGuideElement,
         mapCellElement,
     };
 };

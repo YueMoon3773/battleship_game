@@ -1,12 +1,11 @@
 /**
- *
- * @param {string} mapType: prep/game
+
  * @param {string} teamSide: team/enemy
  * @returns
  */
-const mapGrid = (mapType, teamSide) => {
-    if (mapType === undefined || teamSide === undefined) {
-        throw new Error('missing input mapType or teamSide');
+const mapGrid = (teamSide) => {
+    if (teamSide === undefined) {
+        throw new Error('missing input teamSide');
     }
     if (typeof teamSide !== 'string' || typeof teamSide !== 'string') {
         throw new Error('mapType and teamSide must be a string');
@@ -16,7 +15,6 @@ const mapGrid = (mapType, teamSide) => {
         mapRows: 10,
         mapCols: 10,
         mapGrid: [],
-        mapType,
         teamSide,
         mapCellsSafe: new Set(),
         mapCellsFired: new Set(),
@@ -159,7 +157,7 @@ const mapGrid = (mapType, teamSide) => {
                     horizontalCellList.push(`R,${endRow + 1},C,${i}`);
                 }
             } else {
-                for (let i = startCol + 1; i <= 10; i++) {
+                for (let i = startCol + 1; i <= getMap().mapCols; i++) {
                     horizontalCellList.push(`R,${endRow + 1},C,${i}`);
                 }
             }
@@ -170,13 +168,13 @@ const mapGrid = (mapType, teamSide) => {
 
             return checkEndCellId
                 ? {
-                      shipOnMap: true,
+                      isShipOnMap: true,
                       horizontalCellList,
                       shipRowStartPos: startRow + 1,
                       shipColStartPos: startCol + 1,
                   }
                 : {
-                      shipOnMap: false,
+                      isShipOnMap: false,
                       horizontalCellList,
                       shipRowStartPos: startRow + 1,
                       shipColStartPos: startCol + 1,
@@ -206,7 +204,7 @@ const mapGrid = (mapType, teamSide) => {
                     verticalCellList.push(`R,${i},C,${endCol + 1}`);
                 }
             } else {
-                for (let i = startRow + 1; i <= 10; i++) {
+                for (let i = startRow + 1; i <= getMap().mapRows; i++) {
                     verticalCellList.push(`R,${i},C,${endCol + 1}`);
                 }
             }
@@ -217,13 +215,13 @@ const mapGrid = (mapType, teamSide) => {
 
             return checkEndCellId
                 ? {
-                      shipOnMap: true,
+                      isShipOnMap: true,
                       verticalCellList,
                       shipRowStartPos: startRow + 1,
                       shipColStartPos: startCol + 1,
                   }
                 : {
-                      shipOnMap: false,
+                      isShipOnMap: false,
                       verticalCellList,
                       shipRowStartPos: startRow + 1,
                       shipColStartPos: startCol + 1,
@@ -342,6 +340,7 @@ const shipList = () => {
             shipType,
             shipSize,
             isVertical: false,
+            shipCellList: [],
             shipColStartPos: 0,
             shipRowStartPos: 0,
         };
@@ -364,7 +363,7 @@ const shipList = () => {
         }
 
         let shipIndex = -99;
-        shipList.find((ship, index) => {
+        getShipList().find((ship, index) => {
             if (ship.shipType === shipType) {
                 shipIndex = index;
             }
@@ -374,45 +373,93 @@ const shipList = () => {
 
     const getShipInfoByType = (shipType) => {
         const shipIndex = getShipIndexInListByType(shipType);
-        if (shipIndex === -99) {
-            return null;
+
+        return shipIndex === -99 ? null : getShipList()[shipIndex];
+    };
+
+    const toggleShipIsVerticalByShipType = (shipType) => {
+        if (shipType === undefined) {
+            throw new Error('Missing input properties');
         }
-        return getShipList()[shipIndex];
+        if (typeof shipType === 'string') {
+            if (getShipInfoByType(shipType) !== null) {
+                getShipInfoByType(shipType).isVertical = !getShipInfoByType(shipType).isVertical;
+            } else return;
+        } else {
+            throw new Error('input ship type must be a string');
+        }
+    };
+
+    const updateShipStartColByShipType = (shipType, newShipStartColPos) => {
+        if (shipType === undefined || newShipStartColPos === undefined) {
+            throw new Error('Missing input properties');
+        }
+        if (typeof shipType === 'string' || typeof newShipStartColPos === 'number') {
+            if (getShipInfoByType(shipType) !== null) {
+                getShipInfoByType(shipType).shipColStartPos = newShipStartColPos;
+            } else return;
+        } else {
+            throw new Error('input ship type must be a string and ship start col must be a number');
+        }
+    };
+
+    const updateShipStartRowByShipType = (shipType, newShipStartRowPos) => {
+        if (shipType === undefined || newShipStartRowPos === undefined) {
+            throw new Error('Missing input properties');
+        }
+        if (typeof shipType === 'string' || typeof newShipStartRowPos === 'number') {
+            if (getShipInfoByType(shipType) !== null) {
+                getShipInfoByType(shipType).shipRowStartPos = newShipStartRowPos;
+            } else return;
+        } else {
+            throw new Error('input ship type must be a string and ship start col must be a number');
+        }
+    };
+
+    const updateShipCellsListByShipType = (shipType, newShipCellsList) => {
+        if (shipType === undefined || newShipCellsList === undefined) {
+            throw new Error('Missing input properties');
+        }
+        if (typeof shipType === 'string' || typeof newShipCellsList === 'object') {
+            if (getShipInfoByType(shipType) !== null) {
+                if (getShipInfoByType(shipType).shipSize === newShipCellsList.length) {
+                    getShipInfoByType(shipType).shipCellList = newShipCellsList;
+                } else throw new Error('length of cell list not equal to ship size');
+            } else return;
+        } else {
+            throw new Error('input ship type must be a string and cell list must be an array');
+        }
+    };
+
+    const checkAllShipIsOnMap = () => {
+        let ret = true;
+        getShipList().forEach((ship) => {
+            if (ship.shipCellList.length === 0 || ship.shipCellList.length !== ship.shipSize) {
+                ret = false;
+            }
+        });
+        return ret;
+    };
+
+    const getCellsContainShips = () => {
+        const cellsContainShips = [];
+        getShipList().forEach((ship) => {
+            cellsContainShips.push(...ship.shipCellList);
+        });
+
+        return cellsContainShips;
     };
 
     return {
         createShipList,
+        toggleShipIsVerticalByShipType,
+        updateShipStartColByShipType,
+        updateShipStartRowByShipType,
+        updateShipCellsListByShipType,
+        checkAllShipIsOnMap,
+        getCellsContainShips,
         getShipList,
-        getShipIndexInListByType,
         getShipInfoByType,
-    };
-};
-
-const shipOverlayHelper = () => {
-    const toggleShipIsVertical = (ship) => {
-        ship.isVertical = !ship.isVertical;
-    };
-
-    const updateShipStartCol = (ship, newShipStartColPos) => {
-        if (typeof newShipStartColPos === 'number') {
-            ship.shipColStartPos = newShipStartColPos;
-        } else {
-            throw new Error('input ship start col must be a number');
-        }
-    };
-
-    const updateShipStartRow = (ship, newShipStartRowPos) => {
-        if (typeof newShipStartRowPos === 'number') {
-            ship.shipRowStartPos = newShipStartRowPos;
-        } else {
-            throw new Error('input ship start col must be a number');
-        }
-    };
-
-    return {
-        toggleShipIsVertical,
-        updateShipStartCol,
-        updateShipStartRow,
     };
 };
 
@@ -420,15 +467,25 @@ const shipOverlayHelper = () => {
 // in index file
 
 // SHIP CHECK
-const test = shipList();
-test.createShipList();
-console.log(test.getShipList());
+// const test = shipList();
+// test.createShipList();
+// console.log('before: ', test.getShipList());
 
-// shipOverlayHelper().toggleShipIsVertical(test.getShipList()[0]);
-// console.log(test.getShipList());
+// test.toggleShipIsVerticalByShipType('submarine');
+// console.log('after toggle: ', test.getShipList());
 
 // console.log(test.getShipIndexInListByType('submarine'));
-console.log(test.getShipInfoByType('submarine'));
+// console.log(test.getShipInfoByType('submarine'));
+
+// test.updateShipCellsListByShipType('carrier', ['R,10,C,4', 'R,10,C,5', 'R,10,C,6', 'R,10,C,7', 'R,10,C,8']);
+// test.updateShipCellsListByShipType('battleship', ['R,1,C,5', 'R,1,C,6', 'R,1,C,7', 'R,10,C,8']);
+// test.updateShipCellsListByShipType('destroyer', ['R,2,C,5', 'R,2,C,6', 'R,2,C,7']);
+// test.updateShipCellsListByShipType('submarine', ['R,6,C,6', 'R,6,C,7', 'R,6,C,8']);
+// test.updateShipCellsListByShipType('cruiser', ['R,9,C,4', 'R,9,C,5']);
+
+// console.log('after: ', test.getShipList());
+// console.log(test.checkAllShipIsOnMap());
+// console.log(test.getCellsContainShips());
 
 // /========================
-export { mapGrid, mapCell, shipList, shipOverlayHelper };
+export { mapGrid, mapCell, shipList };

@@ -124,7 +124,7 @@
             </div>
 
             <!-- PREPARATION SCREEN SECTION  -->
-            <div class="prepScreen">
+            <div class="prepScreen ">
                 <div class="prepWrapper">
                     <div class="prepTop">
                         <div class="pTopImgWrapper">
@@ -179,9 +179,13 @@
                                 <div class="number">10</div>
                             </div>
                             <div class="prepMapWrapper">
-                                <div class="mapGrid">
+                                <div class="mapVisualEffect">
                                     <div class="mapCrossHair team"></div>
                                     <div class="mapWaveGuide team"></div>
+                                </div>
+                                <div class="mapGrid">
+                                    <!-- <div class="mapCrossHair team"></div>
+                                    <div class="mapWaveGuide team"></div> -->
                                 </div>
 
                                 <div class="mapShipsOverlay"></div>
@@ -189,7 +193,7 @@
                         </div>
 
                         <div class="pMidRight">
-                            <div class="shipCard" data-shipCardType="carrier" draggable="true">
+                            <div class="shipCard" data-ship_type="carrier" data-ship_size="5" draggable="true">
                                 <span class="shipCardCorner corner top-left"></span>
                                 <span class="shipCardCorner corner top-right"></span>
                                 <span class="shipCardCorner corner bottom-left"></span>
@@ -225,7 +229,7 @@
                                 </div>
                             </div>
 
-                            <div class="shipCard" data-shipCardType="battleship" draggable="true">
+                            <div class="shipCard" data-ship_type="battleship" data-ship_size="4" draggable="true">
                                 <span class="shipCardCorner corner top-left"></span>
                                 <span class="shipCardCorner corner top-right"></span>
                                 <span class="shipCardCorner corner bottom-left"></span>
@@ -256,7 +260,7 @@
                                 </div>
                             </div>
 
-                            <div class="shipCard" data-shipCardType="destroyer" draggable="true">
+                            <div class="shipCard" data-ship_type="destroyer" data-ship_size="3" draggable="true">
                                 <span class="shipCardCorner corner top-left"></span>
                                 <span class="shipCardCorner corner top-right"></span>
                                 <span class="shipCardCorner corner bottom-left"></span>
@@ -292,7 +296,7 @@
                                 </div>
                             </div>
 
-                            <div class="shipCard" data-shipCardType="submarine" draggable="true">
+                            <div class="shipCard" data-ship_type="submarine" data-ship_size="3" draggable="true">
                                 <span class="shipCardCorner corner top-left"></span>
                                 <span class="shipCardCorner corner top-right"></span>
                                 <span class="shipCardCorner corner bottom-left"></span>
@@ -328,7 +332,7 @@
                                 </div>
                             </div>
 
-                            <div class="shipCard" data-shipCardType="cruiser" draggable="true">
+                            <div class="shipCard" data-ship_type="cruiser" data-ship_size="2" draggable="true">
                                 <span class="shipCardCorner corner top-left"></span>
                                 <span class="shipCardCorner corner top-right"></span>
                                 <span class="shipCardCorner corner bottom-left"></span>
@@ -419,10 +423,11 @@
                                 <div class="number">10</div>
                             </div>
                             <div class="gSideMapWrapper">
-                                <div class="mapGrid team">
+                                <div class="mapVisualEffect">
                                     <div class="mapCrossHair team"></div>
                                     <div class="mapWaveGuide team"></div>
                                 </div>
+                                <div class="mapGrid team"></div>
                                 <div class="mapShipsOverlay team"></div>
                             </div>
                         </div>
@@ -454,10 +459,11 @@
                                 <div class="number">10</div>
                             </div>
                             <div class="gSideMapWrapper">
-                                <div class="mapGrid enemy">
+                                <div class="mapVisualEffect">
                                     <div class="mapCrossHair enemy"></div>
                                     <div class="mapWaveGuide enemy"></div>
                                 </div>
+                                <div class="mapGrid enemy"></div>
                                 <div class="mapShipsOverlay enemy"></div>
                             </div>
                         </div>

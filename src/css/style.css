@@ -350,7 +350,22 @@ body {
 /* =============================================== */
 /* MAP GRID SETUP  */
 /* =============================================== */
+.mapVisualEffect {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    height: 100%;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: transparent;
+
+    overflow: hidden;
+    position: relative;
+    z-index: 20;
+}
+
 .mapGrid {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
     height: 100%;
     width: 100%;
     aspect-ratio: 1 / 1;
@@ -363,7 +378,7 @@ body {
 
     overflow: hidden;
     position: relative;
-    z-index: 20;
+    z-index: 25;
 }
 
 .mapGrid.team {
@@ -455,10 +470,12 @@ body {
     cursor: crosshair;
 }
 
+.mapCell.red,
 .mapCell.red:hover {
     background-color: var(--map_cell_red_bg_color);
 }
 
+.mapCell.green,
 .mapCell.green:hover {
     background-color: var(--map_cell_green_bg_color);
 }
@@ -517,6 +534,8 @@ body {
 /* SHIPS OVERLAY SETUP  */
 /* =============================================== */
 .mapShipsOverlay {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
     height: 100%;
     width: 100%;
     position: absolute;
@@ -957,11 +976,13 @@ body {
 
 .pMidDirections .gameBtn.active {
     background-color: var(--ele_light_white_bg_color);
+    color: var(--black_text);
+    font-weight: 960;
 }
 
 .pMidDirections .gameBtn.active:hover {
     background-color: var(--dark_gray_color);
-    color: var(--white_color);
+    color: var(--black_color);
 }
 
 .pLetterWrapper {
@@ -978,6 +999,9 @@ body {
     width: calc(var(--cell_size) * 10.1);
     background-image: var(--radial_team_map_color_overlay);
     border: 4.2px solid var(--primary_color);
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
 }
 
 .pMidRight {
@@ -1062,6 +1086,25 @@ body {
 
 .shipCard.dragging {
     opacity: 0.36;
+    transform: scale(0.66);
+}
+.shipCard.drop {
+    cursor: not-allowed;
+}
+
+.shipCard.drop > *,
+.shipCard.drop .shipCardCorner {
+    cursor: not-allowed;
+    opacity: 0.36;
+}
+
+.shipCard.drop .shipCardCorner {
+    height: 16%;
+    width: 16%;
+}
+
+.shipCard.drop:hover > *,
+.shipCard.drop:hover .shipCardCorner {
 }
 
 .prepBot {
@@ -1158,6 +1201,9 @@ body {
     position: relative;
     height: calc(var(--cell_size) * 10.1);
     width: calc(var(--cell_size) * 10.1);
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
 }
 
 .gameChatWrapper {

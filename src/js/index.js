@@ -52,35 +52,17 @@
 /*
 Write func to trans form cell col grid in svg func
 change svg vertical by checking true false and add 'vertical'
+rerender map when 
 */
 
 import '../css/style.css';
 
-// import shipsOverlay from './dom/shipsOverlayElement';
-
-import { prepMapGrid, prepMapShipsOverlay } from './dom/htmlDom';
-import htmlElements from './elementsToDom/elementAddToHtml';
-import shipsSvgOverlay from './elementsToDom/shipsOverlayElement';
-import domHelper from './dom/domHelper';
-
-for (let row = 1; row < 11; row++) {
-    for (let col = 1; col < 11; col++) {
-        let gridID = `R,${row},C,${col}`;
-        const mapCell = htmlElements().mapCellElement(gridID, false);
-        domHelper().appendDomEle(prepMapGrid, mapCell);
-    }
-}
-
-// const prepCarrierImg = shipsSvgOverlay().carrierImg(10, 2, true);
-// const prepCarrierImg = shipsSvgOverlay().carrierImg(1, 1, false);
-// domHelper().insertDomEle(prepMapShipsOverlay, prepCarrierImg);
-
 // ==============================
-import { mapGrid, mapCell, shipOverlayHelper } from './factories/mapComponents';
+import { mapGrid, mapCell } from './factories/mapComponents';
 
-const grid = mapGrid('prep', 'team');
-grid.buildMapGrid();
-const map = grid.getMapGrid();
+// const grid = mapGrid('team');
+// grid.buildMapGrid();
+// const map = grid.getMapGrid();
 // console.log('map: ', map);
 // console.log('map cell: ', map[0][0].getCell());
 
@@ -103,30 +85,41 @@ const map = grid.getMapGrid();
 // console.log('vertical test2');
 // console.log('ship cell on map?: ', grid.getShipVerticalCells('R,1,C,6', 5));
 
-// ===============================
-// 1) when drag starts you can stash which ship was picked up
-// document.querySelectorAll('.shipCard').forEach((card) => {
-//     card.addEventListener('dragstart', (e) => {
-//         e.dataTransfer.setData('text/plain', card.id);
-//     });
-// });
+// ===========================
+import { teamPlayer } from './gameController/playersHandler';
+import domDisplay from './dom/domDisplayHandler';
+// import { prepShipCardsDragHandler, prepMapCellsHandler, prepDirectionsBtnsClickHandler } from './dom/domLogicHandler';
+import domLogic from './dom/domLogicHandler';
 
-// // 2) on every grid cell, listen for dragover / drop
-// document.querySelectorAll('.prepScreen .mapCell').forEach((cell) => {
-//     cell.addEventListener('dragenter', (e) => {
-//         e.preventDefault(); // allow drop
-//         cell.classList.add('red'); // highlight
-//         // e.target is your cell
-//         console.log('on cell', cell.dataset.cellPos);
-//     });
-//     cell.addEventListener('dragleave', () => {
-//         cell.classList.remove('red');
-//     });
-//     cell.addEventListener('drop', (e) => {
-//         e.preventDefault();
-//         cell.classList.remove('red');
-//         const shipId = e.dataTransfer.getData('text/plain');
-//         console.log('Dropped ship', shipId, 'on cell', cell.dataset.cellPos);
-//         // do your placement logic…
-//     });
-// });
+import {
+    prepHorizontalBtn,
+    prepVerticalBtn,
+    mapVisualEffect,
+    prepMapGrid,
+    prepShipCards,
+    prepMapShipsOverlay,
+} from './dom/htmlDom';
+
+import shipsOverlay from './elementsToDom/shipsOverlayElement';
+
+import htmlElements from './elementsToDom/elementAddToHtml';
+import shipsSvgOverlay from './elementsToDom/shipsOverlayElement';
+
+const team = teamPlayer();
+console.log(team.teamMap);
+console.log(team.teamShipsManager);
+
+// console.log(Array.from(team.teamMap.mapCellsSafe));
+
+// console.log(team.teamMap.mapGrid);
+// console.log(team.teamMap.mapGrid[0][1].getCell());
+
+// PREP SCREEN
+const domLogicHandler = domLogic();
+// initial prep map cell
+domDisplay().renderMapCells(prepMapGrid, team.teamMap.teamSide, team.teamMap.mapGrid);
+
+domLogicHandler.prepDirectionsBtnsClickHandler(prepHorizontalBtn, prepVerticalBtn);
+domLogicHandler.prepShipCardsDragHandler(prepShipCards);
+const prepMapCells = document.querySelectorAll('.prepScreen .mapCell');
+domLogicHandler.prepMapCellsHandler(prepMapGrid, prepMapCells, prepVerticalBtn, team);
