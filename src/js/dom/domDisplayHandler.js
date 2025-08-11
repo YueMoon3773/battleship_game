@@ -57,17 +57,21 @@ const domDisplay = () => {
         }
     };
 
-    const shipCardDraggingEffect = (shipCard) => {
+    const addShipCardDraggingEffect = (shipCard) => {
         shipCard.classList.add('dragging');
     };
 
-    const shipCardDragEndEffect = (shipCard) => {
+    const addShipCardDragEndEffect = (shipCard) => {
         shipCard.classList.remove('dragging');
     };
 
-    const shipCardDropEffect = (shipCard) => {
+    const addShipCardDropEffect = (shipCard) => {
         shipCard.classList.remove('dragging');
         shipCard.classList.add('drop');
+    };
+
+    const removeShipCardDropEffect = (shipCard) => {
+        shipCard.classList.remove('drop');
     };
 
     /**
@@ -76,16 +80,15 @@ const domDisplay = () => {
      * @param {Array} cellsContainShipsList - cells that have ships (result from getCellsContainShips)
      * @param {Array} cellsWithEffectList - check result of horizontalCellList/verticalCellList by getShipHorizontalCells, getShipVerticalCells
      * @param {boolean} isDraggingShipOnMap - check result of isShipOnMap by getShipHorizontalCells, getShipVerticalCells
+     * @param {boolean} isEffectCellsOverlapCellsHaveShip - check if effect cell overlap with cells have ship
      */
     const addCellColorEffectWhileDraggingShipCard = (
         allCellsOnMapList,
         cellsContainShipsList,
         cellsWithEffectList,
         isDraggingShipOnMap,
+        isEffectCellsOverlapCellsHaveShip,
     ) => {
-        const isEffectCellsOverlapCellsHaveShip = cellsWithEffectList.some((cell) =>
-            cellsContainShipsList.includes(cell),
-        );
         // Case 1: green cells
         // effect cells on map + effect cell not in the cells have ships list
         // => cell is ok add GREEN class
@@ -128,10 +131,12 @@ const domDisplay = () => {
         insertDomEle,
         renderMapCells,
         changeActivePrepDirectionBtns,
-        shipCardDraggingEffect,
-        shipCardDragEndEffect,
-        shipCardDropEffect,
+        addShipCardDraggingEffect,
+        addShipCardDragEndEffect,
+        addShipCardDropEffect,
+        removeShipCardDropEffect,
         addCellColorEffectWhileDraggingShipCard,
+        removeCellColorEffect,
     };
 };
 

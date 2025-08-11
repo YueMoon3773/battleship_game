@@ -38,9 +38,9 @@ const shipsSvgOverlay = () => {
             shipRowPos,
             shipIsVertical,
         );
-        console.log(verticalClass);
-        console.log(gridCol);
-        console.log(gridRow);
+        // console.log(verticalClass);
+        // console.log(gridCol);
+        // console.log(gridRow);
 
         const svgElement = `
         <svg

@@ -98,6 +98,7 @@ import {
     prepMapGrid,
     prepShipCards,
     prepMapShipsOverlay,
+    prepResetBtn,
 } from './dom/htmlDom';
 
 import shipsOverlay from './elementsToDom/shipsOverlayElement';
@@ -107,7 +108,7 @@ import shipsSvgOverlay from './elementsToDom/shipsOverlayElement';
 
 const team = teamPlayer();
 console.log(team.teamMap);
-console.log(team.teamShipsManager);
+console.log(team.teamShipsManager.getShipList());
 
 // console.log(Array.from(team.teamMap.mapCellsSafe));
 
@@ -116,10 +117,14 @@ console.log(team.teamShipsManager);
 
 // PREP SCREEN
 const domLogicHandler = domLogic();
+const domPrepScreenLogic = domLogicHandler.prepScreenLogic();
 // initial prep map cell
 domDisplay().renderMapCells(prepMapGrid, team.teamMap.teamSide, team.teamMap.mapGrid);
 
-domLogicHandler.prepDirectionsBtnsClickHandler(prepHorizontalBtn, prepVerticalBtn);
-domLogicHandler.prepShipCardsDragHandler(prepShipCards);
+domPrepScreenLogic.prepDirectionsBtnsClickHandler(prepHorizontalBtn, prepVerticalBtn);
+domPrepScreenLogic.prepShipCardsDragHandler(prepShipCards);
 const prepMapCells = document.querySelectorAll('.prepScreen .mapCell');
-domLogicHandler.prepMapCellsHandler(prepMapGrid, prepMapCells, prepVerticalBtn, team);
+domPrepScreenLogic.prepMapCellsHandler(prepVerticalBtn, prepMapCells, prepMapShipsOverlay, team);
+prepResetBtn.addEventListener('click', () => {
+    domPrepScreenLogic.prepShipCardsResetDraggableAttr(prepShipCards, prepMapShipsOverlay, team);
+});

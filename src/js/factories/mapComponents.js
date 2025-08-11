@@ -352,6 +352,14 @@ const shipList = () => {
         });
     };
 
+    const resetShipList = () => {
+        const shipLength = shipList.length;
+        for (let i = 0; i < shipLength; i++) {
+            shipList.pop();
+        }
+        createShipList();
+    };
+
     const getShipList = () => shipList;
 
     const getShipIndexInListByType = (shipType) => {
@@ -452,6 +460,7 @@ const shipList = () => {
 
     return {
         createShipList,
+        resetShipList,
         toggleShipIsVerticalByShipType,
         updateShipStartColByShipType,
         updateShipStartRowByShipType,

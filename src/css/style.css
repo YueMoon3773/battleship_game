@@ -1095,7 +1095,7 @@ body {
 .shipCard.drop > *,
 .shipCard.drop .shipCardCorner {
     cursor: not-allowed;
-    opacity: 0.36;
+    opacity: 0.26;
 }
 
 .shipCard.drop .shipCardCorner {
