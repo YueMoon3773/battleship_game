@@ -126,6 +126,18 @@ const domDisplay = () => {
         }
     };
 
+    const addDisablePrepConfirmBtn = (confirmBtn) => {
+        if (!confirmBtn.classList.contains('disabled')) {
+            confirmBtn.classList.add('disabled');
+        }
+    };
+
+    const removeDisablePrepConfirmBtn = (confirmBtn) => {
+        if (confirmBtn.classList.contains('disabled')) {
+            confirmBtn.classList.remove('disabled');
+        }
+    };
+
     return {
         appendDomEle,
         insertDomEle,
@@ -137,6 +149,8 @@ const domDisplay = () => {
         removeShipCardDropEffect,
         addCellColorEffectWhileDraggingShipCard,
         removeCellColorEffect,
+        addDisablePrepConfirmBtn,
+        removeDisablePrepConfirmBtn,
     };
 };
 

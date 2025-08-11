@@ -139,7 +139,7 @@ const mapGrid = (teamSide) => {
         if (cellId === undefined || shipSize === undefined) {
             throw new Error('Missing cell id or ship size');
         } else if (typeof cellId !== 'string' || typeof shipSize !== 'number') {
-            throw new TypeError('Cell id must be a string');
+            throw new TypeError('Cell id must be a string and ship size must be a number');
         } else if (findCellIndexesInMapById(cellId) === null) {
             return null;
         } else {
