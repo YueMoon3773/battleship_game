@@ -21,15 +21,25 @@ const domDisplay = () => {
         }
     };
 
+    const unhideDomElement = (domElement) => {
+        if (domElement.classList.contains('hide')) {
+            domElement.classList.remove('hide');
+        }
+    };
+    const hideDomElement = (domElement) => {
+        if (!domElement.classList.contains('hide')) {
+            domElement.classList.add('hide');
+        }
+    };
+
     /**
      *
      * @param {object} parentElement - map cells parent
-     * @param {string} playerTeamSide - team/enemy
      * @param {object} playerMapGrid - mapGrid object
      * @param {boolean} allCellsAreDisabled - team map in game play, all cell disabled
      */
-    const renderMapCells = (parentElement, playerTeamSide, playerMapGrid, allCellsAreDisabled = false) => {
-        if (!parentElement || !playerTeamSide || !playerMapGrid) {
+    const renderMapCells = (parentElement, playerMapGrid, allCellsAreDisabled = false) => {
+        if (!parentElement || !playerMapGrid) {
             throw new Error('missing input parameters');
         }
         parentElement.innerHTML = '';
@@ -77,14 +87,12 @@ const domDisplay = () => {
     /**
      *
      * @param {Array} allCellsOnMapList
-     * @param {Array} cellsContainShipsList - cells that have ships (result from getCellsContainShips)
      * @param {Array} cellsWithEffectList - check result of horizontalCellList/verticalCellList by getShipHorizontalCells, getShipVerticalCells
      * @param {boolean} isDraggingShipOnMap - check result of isShipOnMap by getShipHorizontalCells, getShipVerticalCells
      * @param {boolean} isEffectCellsOverlapCellsHaveShip - check if effect cell overlap with cells have ship
      */
     const addCellColorEffectWhileDraggingShipCard = (
         allCellsOnMapList,
-        cellsContainShipsList,
         cellsWithEffectList,
         isDraggingShipOnMap,
         isEffectCellsOverlapCellsHaveShip,
@@ -141,6 +149,8 @@ const domDisplay = () => {
     return {
         appendDomEle,
         insertDomEle,
+        hideDomElement,
+        unhideDomElement,
         renderMapCells,
         changeActivePrepDirectionBtns,
         addShipCardDraggingEffect,

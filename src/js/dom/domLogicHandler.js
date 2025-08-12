@@ -70,7 +70,7 @@ const domLogicHelper = () => {
         // console.log(getTmpVar().tmpCanDropShip);
     };
 
-    const updatePlayerDropShipInfo = (playerObj, playerSide) => {
+    const updatePlayerDropShipInfo = (playerObj) => {
         if (getTmpVar().tmpIsDraggingShipOnMap) {
             if (
                 !getTmpVar().tmpCheckCellsResult ||
@@ -83,25 +83,25 @@ const domLogicHelper = () => {
 
         // Update shipList in team obj
         if (getTmpVar().tmpIsDraggingShipVertical === true) {
-            playerObj[`${playerSide}ShipsManager`].toggleShipIsVerticalByShipType(getTmpVar().tmpShipType);
+            playerObj.playerShipsManager.toggleShipIsVerticalByShipType(getTmpVar().tmpShipType);
         }
-        playerObj[`${playerSide}ShipsManager`].updateShipStartColByShipType(
+        playerObj.playerShipsManager.updateShipStartColByShipType(
             getTmpVar().tmpShipType,
             getTmpVar().tmpCheckCellsResult.shipColStartPos,
         );
-        playerObj[`${playerSide}ShipsManager`].updateShipStartRowByShipType(
+        playerObj.playerShipsManager.updateShipStartRowByShipType(
             getTmpVar().tmpShipType,
             getTmpVar().tmpCheckCellsResult.shipRowStartPos,
         );
-        playerObj[`${playerSide}ShipsManager`].updateShipCellsListByShipType(
+        playerObj.playerShipsManager.updateShipCellsListByShipType(
             getTmpVar().tmpShipType,
             getTmpVar().tmpEffectCellsList,
         );
-        // console.log(teamPlayerObj.teamShipsManager.getShipList());
-        // console.log(teamPlayerObj.teamShipsManager.getShipInfoByType(shipType));
+        // console.log(teamPlayerObj.playerShipsManager.getShipList());
+        // console.log(teamPlayerObj.playerShipsManager.getShipInfoByType(shipType));
 
         // check if all ships are on map
-        if (playerObj[`${playerSide}ShipsManager`].checkAllShipIsOnMap() === true) {
+        if (playerObj.playerShipsManager.checkAllShipIsOnMap() === true) {
             getTmpVar().tmpAreAllShipsOnMap = true;
         }
     };
@@ -112,6 +112,41 @@ const domLogicHelper = () => {
         updateTmpVarValueByKey,
         verifyCanDropShipHandler,
         updatePlayerDropShipInfo,
+    };
+};
+
+const startScreenLogic = () => {
+    const startHelpBtnClickHandler = (startHelpBtn, helperScreenWrapper, startHelpBox) => {
+        startHelpBtn.addEventListener('click', () => {
+            domDisplay().unhideDomElement(helperScreenWrapper);
+            domDisplay().unhideDomElement(startHelpBox);
+        });
+    };
+
+    const closeHelpBoxBtnHandler = (startHelpBoxCloseBtn, helperScreenWrapper, startHelpBox) => {
+        startHelpBoxCloseBtn.addEventListener('click', () => {
+            domDisplay().hideDomElement(helperScreenWrapper);
+            domDisplay().hideDomElement(startHelpBox);
+        });
+    };
+
+    const getPlayerNameAndGoToPrepScreen = (startInp, startScreen, prepScreen, prepUserNameText) => {
+        const playerName = startInp.value;
+
+        domDisplay().hideDomElement(startScreen);
+        domDisplay().unhideDomElement(prepScreen);
+        prepUserNameText.textContent = playerName;
+        if (playerName !== '') {
+            prepUserNameText.style.marginLeft = '0.26em';
+        }
+
+        return playerName;
+    };
+
+    return {
+        startHelpBtnClickHandler,
+        closeHelpBoxBtnHandler,
+        getPlayerNameAndGoToPrepScreen,
     };
 };
 
@@ -176,21 +211,20 @@ const prepScreenLogic = () => {
 
                 // setup variable to prepare for dropping ship by domLogicHelper
                 if (isPrepVerticalBtnActive(prepVerticalBtn)) {
-                    checkCellsResult = teamPlayerObj.teamMapManager.getShipVerticalCells(cellId, shipSize);
+                    checkCellsResult = teamPlayerObj.playerMapManager.getShipVerticalCells(cellId, shipSize);
                 } else {
-                    checkCellsResult = teamPlayerObj.teamMapManager.getShipHorizontalCells(cellId, shipSize);
+                    checkCellsResult = teamPlayerObj.playerMapManager.getShipHorizontalCells(cellId, shipSize);
                 }
 
                 helper.verifyCanDropShipHandler(
                     isPrepVerticalBtnActive(prepVerticalBtn),
                     checkCellsResult,
-                    teamPlayerObj.teamShipsManager.getCellsContainShips(),
+                    teamPlayerObj.playerShipsManager.getCellsContainShips(),
                 );
 
                 //set styles for hover cells
                 domDisplay().addCellColorEffectWhileDraggingShipCard(
-                    Array.from(teamPlayerObj.teamMapManager.getSafeCells()),
-                    teamPlayerObj.teamShipsManager.getCellsContainShips(),
+                    Array.from(teamPlayerObj.playerMapManager.getSafeCells()),
                     helper.getTmpVar().tmpEffectCellsList,
                     helper.getTmpVar().tmpIsDraggingShipOnMap,
                     helper.getTmpVar().tmpIsEffectCellsOverlapCellsHaveShip,
@@ -204,20 +238,21 @@ const prepScreenLogic = () => {
 
                 if (helper.getTmpVar().tmpCanDropShip) {
                     // Update shipList in team obj
-                    helper.updatePlayerDropShipInfo(teamPlayerObj, teamPlayerObj.teamMapManager.getMap().teamSide);
+                    helper.updatePlayerDropShipInfo(teamPlayerObj);
 
                     // console.log(`${shipType} drop on cell ${cell.dataset.cell_pos}`);
 
                     // setup and display ship overlay img
                     const shipOverlaySvg = shipsSvgOverlay()[`${shipType}Img`](
-                        teamPlayerObj.teamShipsManager.getShipInfoByType(shipType).shipColStartPos,
-                        teamPlayerObj.teamShipsManager.getShipInfoByType(shipType).shipRowStartPos,
-                        teamPlayerObj.teamShipsManager.getShipInfoByType(shipType).isVertical,
+                        teamPlayerObj.playerShipsManager.getShipInfoByType(shipType).shipColStartPos,
+                        teamPlayerObj.playerShipsManager.getShipInfoByType(shipType).shipRowStartPos,
+                        teamPlayerObj.playerShipsManager.getShipInfoByType(shipType).isVertical,
                     );
                     domDisplay().insertDomEle(prepMapShipsOverlay, shipOverlaySvg);
 
                     // if all ships are on map => allow confirm button
                     if (helper.getTmpVar().tmpAreAllShipsOnMap === true) {
+                        prepConfirmBtn.removeAttribute('disabled');
                         domDisplay().removeDisablePrepConfirmBtn(prepConfirmBtn);
                     }
 
@@ -231,11 +266,12 @@ const prepScreenLogic = () => {
         });
     };
 
-    const prepShipCardsResetDraggableAttr = (shipCards, prepMapShipsOverlay, prepConfirmBtn, teamPlayerObj) => {
+    const prepResetBtnHandler = (shipCards, prepMapShipsOverlay, prepConfirmBtn, teamPlayerObj) => {
         prepMapShipsOverlay.innerHTML = '';
+        prepConfirmBtn.setAttribute('disabled', '');
         domDisplay().addDisablePrepConfirmBtn(prepConfirmBtn);
         helper.resetTmpVar();
-        teamPlayerObj.teamShipsManager.resetShipList();
+        teamPlayerObj.playerShipsManager.resetShipList();
 
         shipCards.forEach((shipCard) => {
             shipCard.setAttribute('draggable', 'true');
@@ -248,8 +284,12 @@ const prepScreenLogic = () => {
         isPrepVerticalBtnActive,
         prepShipCardsDragHandler,
         prepMapCellsHandler,
-        prepShipCardsResetDraggableAttr,
+        prepResetBtnHandler,
     };
 };
 
-export { prepScreenLogic };
+const gameScreenLogic = () => {
+    const helper = domLogicHelper();
+};
+
+export { startScreenLogic, prepScreenLogic };

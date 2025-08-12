@@ -1,5 +1,5 @@
 // START SCREEN ELEMENTS
-export const startScreen = document.getElementById('.startScreen');
+export const startScreen = document.querySelector('.startScreen');
 export const startHelpBtn = document.querySelector('.startHelpBtnWrapper');
 export const startInp = document.querySelector('.startInp');
 export const startBtn = document.querySelector('.startBtn');

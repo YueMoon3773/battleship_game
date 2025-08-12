@@ -20,7 +20,7 @@
     - DONE state: isDisabled
     - DONE state: isHasShip => if fired add red dot otherwise blue dot
     - DONE state: ship type
-    - DONE state: teamSide: team/enemy
+    - DONE state: playerSide: team/enemy
     - DONE change/get states
 
 * Ships fac func:
@@ -33,7 +33,7 @@
 * Player fac func:
     - DONE state: name
     - DONE state: isActive
-    - DONE state: teamSide: team/enemy
+    - DONE state: playerSide: team/enemy
     - DONE change/get states
 
 * Prep game controller:
@@ -58,7 +58,7 @@ rerender map when
 import '../css/style.css';
 
 // ==============================
-import { mapGrid, mapCell } from './factories/mapComponents';
+// import { mapGrid, mapCell } from './factories/mapComponents';
 
 // const grid = mapGrid('team');
 // grid.buildMapGrid();
@@ -86,20 +86,53 @@ import { mapGrid, mapCell } from './factories/mapComponents';
 // console.log('ship cell on map?: ', grid.getShipVerticalCells('R,1,C,6', 5));
 
 // ===========================
-import { teamPlayer } from './gameController/playersHandler';
+import playersManager from './factories/players';
+import { mapGrid, mapCell, shipList } from './factories/mapComponents';
 import domDisplay from './dom/domDisplayHandler';
 // import { prepShipCardsDragHandler, prepMapCellsHandler, prepDirectionsBtnsClickHandler } from './dom/domLogicHandler';
-import { prepScreenLogic } from './dom/domLogicHandler';
+import { startScreenLogic, prepScreenLogic } from './dom/domLogicHandler';
 
 import {
+    startScreen,
+    startHelpBtn,
+    startInp,
+    startBtn,
+    prepScreen,
+    prepUserNameText,
     prepHorizontalBtn,
     prepVerticalBtn,
     mapVisualEffect,
     prepMapGrid,
-    prepShipCards,
     prepMapShipsOverlay,
+    prepShipCards,
+    prepCarrierShipCard,
+    prepCarrierShipCardText,
+    prepBattleshipShipCard,
+    prepBattleshipShipCardText,
+    prepDestroyerShipCard,
+    prepDestroyerShipCardText,
+    prepSubmarineShipCard,
+    prepSubmarineShipCardText,
+    prepCruiserShipCard,
+    prepCruiserShipCardText,
     prepResetBtn,
     prepConfirmBtn,
+    gameScreen,
+    gameTeamMapGrid,
+    gameTeamMapShipsOverlay,
+    gameEnemyMapGrid,
+    gameEnemyMapShipsOverlay,
+    gameTeamChatContent,
+    gameEnemyChatContent,
+    helperScreenWrapper,
+    startHelpBox,
+    startHelpBoxCloseBtn,
+    resultBox,
+    resultHeading,
+    resultTeamCharImg,
+    resultEnemyCharImg,
+    resultText,
+    resultBtn,
 } from './dom/htmlDom';
 
 import shipsOverlay from './elementsToDom/shipsOverlayElement';
@@ -107,26 +140,48 @@ import shipsOverlay from './elementsToDom/shipsOverlayElement';
 import htmlElements from './elementsToDom/elementAddToHtml';
 import shipsSvgOverlay from './elementsToDom/shipsOverlayElement';
 
-const team = teamPlayer();
-console.log(team.teamMap);
-console.log(team.teamShipsManager.getShipList());
-
-// console.log(Array.from(team.teamMap.mapCellsSafe));
-
-console.log(team.teamMapManager.getMap());
-// console.log(team.teamMap.mapGrid);
-// console.log(team.teamMap.mapGrid[0][1].getCell());
-
-// PREP SCREEN
-// const domLogicHandler = domLogic();
+const players = playersManager();
+let team;
+// const team = players.getTeamInfo();
 const domPrepScreenLogic = prepScreenLogic();
-// initial prep map cell
-domDisplay().renderMapCells(prepMapGrid, team.teamMap.teamSide, team.teamMap.mapGrid);
 
-domPrepScreenLogic.prepDirectionsBtnsClickHandler(prepHorizontalBtn, prepVerticalBtn);
-domPrepScreenLogic.prepShipCardsDragHandler(prepShipCards);
-const prepMapCells = document.querySelectorAll('.prepScreen .mapCell');
-domPrepScreenLogic.prepMapCellsHandler(prepVerticalBtn, prepMapCells, prepMapShipsOverlay, prepConfirmBtn, team);
+// START SCREEN
+const domStartScreenLogic = startScreenLogic();
+domStartScreenLogic.startHelpBtnClickHandler(startHelpBtn, helperScreenWrapper, startHelpBox);
+domStartScreenLogic.closeHelpBoxBtnHandler(startHelpBoxCloseBtn, helperScreenWrapper, startHelpBox);
+
+// start game btn +> change to prep screen + set up prep screen
+startBtn.addEventListener('click', () => {
+    const playerName = domStartScreenLogic.getPlayerNameAndGoToPrepScreen(
+        startInp,
+        startScreen,
+        prepScreen,
+        prepUserNameText,
+    );
+
+    players.adUserToPlayerList(playerName);
+    team = players.getTeamInfo();
+    console.log(team);
+    console.log(team.playerShipsManager.getShipList());
+
+    // CHANGE TO PREP SCREEN
+    // initialize prep map cell
+    domDisplay().renderMapCells(prepMapGrid, team.playerMapManager.getMapGrid());
+
+    // change vertical state of dragging ship and btns styles
+    domPrepScreenLogic.prepDirectionsBtnsClickHandler(prepHorizontalBtn, prepVerticalBtn);
+
+    //handle dragging ship card and cells when drag and drop ship
+    domPrepScreenLogic.prepShipCardsDragHandler(prepShipCards);
+    const prepMapCells = document.querySelectorAll('.prepScreen .mapCell');
+    domPrepScreenLogic.prepMapCellsHandler(prepVerticalBtn, prepMapCells, prepMapShipsOverlay, prepConfirmBtn, team);
+});
+
 prepResetBtn.addEventListener('click', () => {
-    domPrepScreenLogic.prepShipCardsResetDraggableAttr(prepShipCards, prepMapShipsOverlay, prepConfirmBtn, team);
+    domPrepScreenLogic.prepResetBtnHandler(prepShipCards, prepMapShipsOverlay, prepConfirmBtn, team);
+});
+
+prepConfirmBtn.addEventListener('click', () => {
+    console.log(team.playerMapManager.getMap());
+    console.log(team.playerShipsManager.getShipList());
 });

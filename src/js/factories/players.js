@@ -1,18 +1,34 @@
-const player = (teamSide, name = '') => {
-    if (!name || !teamSide) {
-        throw new Error('missing input name or teamSide');
-    }
-    if (typeof name !== 'string' || typeof teamSide !== 'string') {
-        throw new Error('name and teamSide must be a string');
-    }
-    const info = {
+import { mapGrid, mapCell, shipList } from '../factories/mapComponents';
+
+const playerInfo = (playerSide, name = '') => {
+    const playerMapManager = mapGrid(playerSide);
+    const playerShipsManager = shipList();
+
+    return {
         name,
         isActive: false,
-        teamSide,
+        playerSide: '',
+        playerMapManager,
+        playerShipsManager,
     };
+};
+// console.log(playerInfo('enemy', 'Sinksalot'));
+// console.log(playerInfo('enemy', 'Sinksalot').playerShipsManager.getShipList());
+// console.log(playerInfo('enemy', 'Sinksalot').playerMapManager.getMap());
 
-    const togglePLayerIsActive = () => {
-        info.isActive = !info.isActive;
+const player = (playerSide, name = '') => {
+    if (name === null || !playerSide) {
+        throw new Error('missing input name or playerSide');
+    }
+    if (typeof name !== 'string' || typeof playerSide !== 'string') {
+        throw new Error('name and playerSide must be a string');
+    }
+
+    const info = playerInfo(playerSide, name);
+    // console.log(typeof info.playerShipManager.getShipList());
+
+    const togglePlayerIsActive = () => {
+        getPlayerInfo().isActive = !info.isActive;
     };
 
     const getPlayerInfo = () => info;
@@ -21,22 +37,22 @@ const player = (teamSide, name = '') => {
     return {
         getPlayerInfo,
         getPlayerActiveState,
-        togglePLayerIsActive,
+        togglePlayerIsActive,
     };
 };
 
-const playersManage = () => {
+const playersManager = () => {
     const playerList = [player('enemy', 'Sinksalot')];
 
     const adUserToPlayerList = (newName = '') => {
         const userPlayer = player('team', newName);
-        userPlayer.togglePLayerIsActive();
+        userPlayer.togglePlayerIsActive();
         playerList.unshift(userPlayer);
     };
 
     const switchActivePlayer = () => {
-        playerList[0].togglePLayerIsActive();
-        playerList[1].togglePLayerIsActive();
+        playerList[0].togglePlayerIsActive();
+        playerList[1].togglePlayerIsActive();
     };
 
     const getPlayerList = () => playerList;
@@ -47,19 +63,30 @@ const playersManage = () => {
             return playerList[1].getPlayerInfo();
         }
     };
+    const getTeamInfo = () => {
+        return playerList[0].getPlayerInfo();
+    };
+
+    const getEnemyInfo = () => {
+        return playerList[1].getPlayerInfo();
+    };
 
     return {
         adUserToPlayerList,
         switchActivePlayer,
         getPlayerList,
         getActivePlayerInfo,
+        getTeamInfo,
+        getEnemyInfo,
     };
 };
 
-const players = playersManage();
-players.adUserToPlayerList('yue');
-console.log(players.getPlayerList()[0].getPlayerInfo());
-console.log(players.getPlayerList()[1].getPlayerInfo());
-console.log(players.getActivePlayerInfo());
-players.switchActivePlayer();
-console.log(players.getActivePlayerInfo());
+export default playersManager;
+
+// const players = playersManager();
+// players.adUserToPlayerList('yue');
+// console.log(players.getPlayerList()[0].getPlayerInfo());
+// console.log(players.getPlayerList()[1].getPlayerInfo());
+// console.log(players.getActivePlayerInfo());
+// players.switchActivePlayer();
+// console.log(players.getActivePlayerInfo());

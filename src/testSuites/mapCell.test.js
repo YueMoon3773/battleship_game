@@ -10,7 +10,7 @@ describe('Map cell test suite', () => {
         expect(typeof retVar).toBe('object');
     });
 
-    it('Func getMapCell must return an object with 8 child ("row", "col", "id", "isFired", "isHasShip", "isDisabled", teamSide", "shipType")', () => {
+    it('Func getMapCell must return an object with 8 child ("row", "col", "id", "isFired", "isHasShip", "isDisabled", playerSide", "shipType")', () => {
         const retVar = mapCell(1, 1).getCell();
 
         expect(typeof retVar).toBe('object');
@@ -22,6 +22,6 @@ describe('Map cell test suite', () => {
         expect(Object.keys(retVar)).toContain('isDisabled');
         expect(Object.keys(retVar)).toContain('isHasShip');
         expect(Object.keys(retVar)).toContain('shipType');
-        expect(Object.keys(retVar)).toContain('teamSide');
+        expect(Object.keys(retVar)).toContain('playerSide');
     });
 });

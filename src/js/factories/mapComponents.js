@@ -1,21 +1,21 @@
 /**
 
- * @param {string} teamSide: team/enemy
+ * @param {string} playerSide: team/enemy
  * @returns
  */
-const mapGrid = (teamSide) => {
-    if (teamSide === undefined) {
-        throw new Error('missing input teamSide');
+const mapGrid = (playerSide) => {
+    if (playerSide === undefined) {
+        throw new Error('missing input playerSide');
     }
-    if (typeof teamSide !== 'string' || typeof teamSide !== 'string') {
-        throw new Error('mapType and teamSide must be a string');
+    if (typeof playerSide !== 'string' || typeof playerSide !== 'string') {
+        throw new Error('mapType and playerSide must be a string');
     }
 
     const map = {
         mapRows: 10,
         mapCols: 10,
         mapGrid: [],
-        teamSide,
+        playerSide,
         mapCellsSafe: new Set(),
         mapCellsFired: new Set(),
     };
@@ -31,6 +31,7 @@ const mapGrid = (teamSide) => {
         }
         // console.log(mapGrid);
     };
+    buildMapGrid();
 
     const findCellIndexesInMapById = (cellId) => {
         if (cellId === undefined) {
@@ -230,7 +231,6 @@ const mapGrid = (teamSide) => {
     };
 
     return {
-        buildMapGrid,
         updateFiredCellInMap,
         getMap,
         getMapGrid,
@@ -255,7 +255,7 @@ const mapCell = (row, col) => {
         row: row + 1,
         col: col + 1,
         id: `R,${row + 1},C,${col + 1}`,
-        teamSide: '',
+        playerSide: '',
         isFired: false,
         isDisabled: false,
         isHasShip: false,
@@ -264,9 +264,9 @@ const mapCell = (row, col) => {
 
     const getCell = () => cell;
 
-    const updateCellTeamSide = (newTeamSide) => {
-        if (typeof newTeamSide === 'string') {
-            cell.teamSide = newTeamSide;
+    const updateCellPlayerSide = (newPlayerSide) => {
+        if (typeof newPlayerSide === 'string') {
+            cell.playerSide = newPlayerSide;
         } else {
             throw new Error('input team side must be a string');
         }
@@ -293,7 +293,7 @@ const mapCell = (row, col) => {
 
     return {
         getCell,
-        updateCellTeamSide,
+        updateCellPlayerSide,
         toggleCellIsFired,
         toggleCellIsHasShip,
         updateShipType,
@@ -351,6 +351,7 @@ const shipList = () => {
             shipList.push(createShipOverlay(shipInfo.shipType, shipInfo.shipSize));
         });
     };
+    createShipList();
 
     const resetShipList = () => {
         const shipLength = shipList.length;
@@ -459,7 +460,6 @@ const shipList = () => {
     };
 
     return {
-        createShipList,
         resetShipList,
         toggleShipIsVerticalByShipType,
         updateShipStartColByShipType,

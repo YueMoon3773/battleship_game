@@ -320,7 +320,7 @@ body {
     width: 100vw;
     overflow: hidden;
     background-color: #060d1f;
-    filter: brightness(2.96) contrast(1.16);
+    filter: brightness(2.66) contrast(1.16);
 
     display: flex;
     align-items: center;
@@ -1348,6 +1348,7 @@ body {
     font-size: 1rem;
     padding: 1em;
     margin: 1em;
+    cursor: pointer;
 
     display: flex;
     align-items: center;
@@ -1355,7 +1356,7 @@ body {
 }
 
 .helpBoxCloseBtn {
-    height: 3.2rem;
+    height: 3.6rem;
     cursor: pointer;
     color: var(--black_text);
 }
@@ -1369,7 +1370,7 @@ body {
 }
 
 .startHelpBoxCloseWrapper:hover .helpBoxCloseBtn.full {
-    width: 3.2rem;
+    width: 3.6rem;
 }
 
 /* =============================================== */
