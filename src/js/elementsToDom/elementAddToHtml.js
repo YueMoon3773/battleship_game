@@ -33,6 +33,7 @@ const htmlElements = () => {
         mapCell.classList.add('mapCell');
         if (cellDisability === true) {
             mapCell.classList.add('disable');
+            mapCell.setAttribute('disabled', '');
         }
         mapCell.dataset.cell_pos = cell_pos;
 

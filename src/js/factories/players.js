@@ -25,7 +25,7 @@ const player = (playerSide, name = '') => {
     }
 
     const info = playerInfo(playerSide, name);
-    // console.log(typeof info.playerShipManager.getShipList());
+    // console.log(typeof info.playerShipsManager.getShipList());
 
     const togglePlayerIsActive = () => {
         getPlayerInfo().isActive = !info.isActive;
@@ -47,7 +47,7 @@ const playersManager = () => {
     const adUserToPlayerList = (newName = '') => {
         const userPlayer = player('team', newName);
         userPlayer.togglePlayerIsActive();
-        playerList.unshift(userPlayer);
+        playerList.push(userPlayer);
     };
 
     const switchActivePlayer = () => {
@@ -64,11 +64,11 @@ const playersManager = () => {
         }
     };
     const getTeamInfo = () => {
-        return playerList[0].getPlayerInfo();
+        return playerList[1].getPlayerInfo();
     };
 
     const getEnemyInfo = () => {
-        return playerList[1].getPlayerInfo();
+        return playerList[0].getPlayerInfo();
     };
 
     return {

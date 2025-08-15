@@ -343,6 +343,7 @@ const shipList = () => {
             shipCellList: [],
             shipColStartPos: 0,
             shipRowStartPos: 0,
+            isShipCompletelyHit: false,
         };
     };
 
@@ -459,6 +460,45 @@ const shipList = () => {
         return cellsContainShips;
     };
 
+    const getShipIndexByItsCells = (cellId) => {
+        if (!getCellsContainShips().includes(cellId)) {
+            return -1;
+        } else {
+            const ret = getShipList().findIndex((ship) => ship.shipCellList.includes(cellId));
+            return ret;
+        }
+    };
+
+    const isHitShip = (cellId) => {
+        return getCellsContainShips().includes(cellId) === true ? true : false;
+    };
+
+    const verifyIfOneShipHitCompletely = (cellId, firedCellsList) => {
+        if (typeof cellId !== 'string') {
+            throw new TypeError('Cell is must be a string');
+        }
+        const shipIndex = getShipIndexByItsCells(cellId);
+        if (shipIndex === -1) {
+            return;
+        } else {
+            const ship = getShipList()[shipIndex];
+            const shipType = ship.shipType;
+            const isShipCompletelyHit = ship.shipCellList.every((shipCell) => firedCellsList.includes(shipCell));
+            if (isShipCompletelyHit) {
+                getShipList()[shipIndex].isShipCompletelyHit = true;
+            }
+
+            return {
+                isShipCompletelyHit,
+                shipType,
+            };
+        }
+    };
+
+    const verifyIfAllShipsHitCompletely = () => {
+        return getShipList().every((ship) => ship.isShipCompletelyHit === true);
+    };
+
     return {
         resetShipList,
         toggleShipIsVerticalByShipType,
@@ -469,6 +509,9 @@ const shipList = () => {
         getCellsContainShips,
         getShipList,
         getShipInfoByType,
+        isHitShip,
+        verifyIfOneShipHitCompletely,
+        verifyIfAllShipsHitCompletely,
     };
 };
 
@@ -495,6 +538,38 @@ const shipList = () => {
 // console.log('after: ', test.getShipList());
 // console.log(test.checkAllShipIsOnMap());
 // console.log(test.getCellsContainShips());
+
+// console.log(test.getShipIndexByItsCells('R,6,C,7'));
+
+// const firedCellsList = [
+//     'R,1,C,7',
+//     'R,10,C,4',
+//     'R,10,C,7',
+//     'R,9,C,4',
+//     'R,2,C,2',
+//     'R,8,C,5',
+//     'R,7,C,1',
+//     'R,9,C,5',
+//     'R,6,C,8',
+//     'R,1,C,5',
+//     'R,1,C,6',
+//     'R,10,C,8',
+//     'R,2,C,6',
+//     'R,2,C,5',
+//     'R,2,C,7',
+//     'R,6,C,7',
+//     'R,6,C,6',
+//     'R,10,C,5',
+//     'R,10,C,6',
+//     'R,10,C,8',
+// ];
+
+// console.log(test.verifyIfOneShipHitCompletely('R,6,C,7', firedCellsList));
+// console.log(test.verifyIfOneShipHitCompletely('R,9,C,4', firedCellsList));
+// console.log(test.verifyIfOneShipHitCompletely('R,2,C,6', firedCellsList));
+// console.log(test.verifyIfOneShipHitCompletely('R,1,C,7', firedCellsList));
+// console.log(test.verifyIfOneShipHitCompletely('R,10,C,6', firedCellsList));
+// console.log(test.verifyIfAllShipsHitCompletely());
 
 // /========================
 export { mapGrid, mapCell, shipList };
