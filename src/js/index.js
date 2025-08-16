@@ -142,9 +142,17 @@ import shipsSvgOverlay from './elementsToDom/shipsOverlayElement';
 
 const players = playersManager();
 let team;
+const enemy = players.getEnemyInfo();
+
+// set up game logic
 const domStartScreenLogic = startScreenLogic();
 const domPrepScreenLogic = prepScreenLogic();
 const domGameScreenLogic = gameScreenLogic();
+
+// set up ships for enemy
+domGameScreenLogic.setUpEnemyFleet(enemy);
+console.log(enemy);
+console.log(enemy.playerShipsManager.getShipList());
 
 // START SCREEN
 domStartScreenLogic.startHelpBtnClickHandler(startHelpBtn, helperScreenWrapper, startHelpBox);
@@ -181,21 +189,21 @@ startBtn.addEventListener('click', () => {
     // console.log(team.playerShipsManager.getCellsContainShips());
 });
 
-//for test => remove afterward
-// players.adUserToPlayerList('Yue');
-// team = players.getTeamInfo();
-// domDisplay().renderMapCells(prepMapGrid, team.playerMapManager.getMapGrid());
-// ===================
-
 prepResetBtn.addEventListener('click', () => {
     domPrepScreenLogic.prepResetBtnHandler(prepShipCards, prepMapShipsOverlay, prepConfirmBtn, team);
 });
 
 prepConfirmBtn.addEventListener('click', () => {
-    console.log(team.playerMapManager.getMap());
-    console.log(team.playerShipsManager.getShipList());
-    console.log(team.playerShipsManager.getCellsContainShips());
-});
+    // console.log(team.playerShipsManager.getShipList());
+    // console.log(team.playerShipsManager.getCellsContainShips());
 
-// const enemy = players.getEnemyInfo();
-// domGameScreenLogic.prepareEnemyShipsOverlay(enemy);
+    domPrepScreenLogic.hidePrepScreenAndGoToGameScreen(prepScreen, gameScreen);
+    domGameScreenLogic.setUpGameScreenMaps(
+        enemy,
+        team,
+        gameTeamMapGrid,
+        gameEnemyMapGrid,
+        gameTeamMapShipsOverlay,
+        gameEnemyMapShipsOverlay,
+    );
+});

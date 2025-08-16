@@ -541,31 +541,30 @@ const prepScreenLogic = () => {
         });
     };
 
+    const hidePrepScreenAndGoToGameScreen = (prepScreen, gameScreen) => {
+        domDisplay().hideDomElement(prepScreen);
+        domDisplay().unhideDomElement(gameScreen);
+    };
+
     return {
         prepDirectionsBtnsClickHandler,
         isPrepVerticalBtnActive,
         prepShipCardsDragHandler,
         prepMapCellsHandler,
         prepResetBtnHandler,
+        hidePrepScreenAndGoToGameScreen,
     };
 };
 
 const gameScreenLogic = () => {
     const helper = domLogicHelper();
 
-    const prepareEnemyShipsOverlay = (enemyPlayerObj) => {
-        // console.log(enemyPlayerObj);
-        // console.log(enemyPlayerObj.playerMapManager);
+    const setUpEnemyFleet = (enemyPlayerObj) => {
         // console.log(enemyPlayerObj.playerMapManager.getSafeCells());
-        // console.log(enemyPlayerObj.playerShipsManager);
         // console.log(enemyPlayerObj.playerShipsManager.getShipList());
-        // console.log(enemyPlayerObj.playerShipsManager.getCellsContainShips());
 
         enemyPlayerObj.playerShipsManager.getShipList().forEach((ship) => {
             let checkCellsResult;
-            const shipType = ship.shipType;
-            const shipSize = ship.shipSize;
-            // console.log(shipType);
 
             // Update type and size to helper
             // same as dragstart of shipCard.
@@ -588,9 +587,9 @@ const gameScreenLogic = () => {
                 // console.log(cellId);
 
                 if (shipVerticalState === true) {
-                    checkCellsResult = enemyPlayerObj.playerMapManager.getShipVerticalCells(cellId, shipSize);
+                    checkCellsResult = enemyPlayerObj.playerMapManager.getShipVerticalCells(cellId, ship.shipSize);
                 } else {
-                    checkCellsResult = enemyPlayerObj.playerMapManager.getShipHorizontalCells(cellId, shipSize);
+                    checkCellsResult = enemyPlayerObj.playerMapManager.getShipHorizontalCells(cellId, ship.shipSize);
                 }
 
                 helper.verifyCanDropShipHandler(
@@ -603,18 +602,56 @@ const gameScreenLogic = () => {
             helper.updatePlayerDropShipInfo(enemyPlayerObj);
             helper.resetTmpVar();
         });
-
-        // if (helper.getTmpVar().tmpAreAllShipsOnMap === true) {
-        // }
-        // console.log(helper.getTmpVar());
-
-        console.log(enemyPlayerObj.playerShipsManager.getShipList());
     };
 
-    const getPossibleMovesInOneDirectionAfterFirstHit = (firedCellId) => {};
+    const setUpMapCellsAndShipsOverlay = (playerObj, mapGrid, mapShipsOverlay) => {
+        if (playerObj.playerSide === 'team') {
+            domDisplay().renderMapCells(mapGrid, playerObj.playerMapManager.getMapGrid(), true);
+
+            playerObj.playerShipsManager.getShipList().forEach((ship) => {
+                const shipType = ship.shipType;
+
+                const shipOverlaySvg = shipsSvgOverlay()[`${shipType}Img`](
+                    playerObj.playerShipsManager.getShipInfoByType(shipType).shipColStartPos,
+                    playerObj.playerShipsManager.getShipInfoByType(shipType).shipRowStartPos,
+                    playerObj.playerShipsManager.getShipInfoByType(shipType).isVertical,
+                );
+
+                domDisplay().insertDomEle(mapShipsOverlay, shipOverlaySvg);
+            });
+        } else {
+            domDisplay().renderMapCells(mapGrid, playerObj.playerMapManager.getMapGrid());
+
+            playerObj.playerShipsManager.getShipList().forEach((ship) => {
+                const shipType = ship.shipType;
+
+                const shipOverlaySvg = shipsSvgOverlay()[`${shipType}Img`](
+                    playerObj.playerShipsManager.getShipInfoByType(shipType).shipColStartPos,
+                    playerObj.playerShipsManager.getShipInfoByType(shipType).shipRowStartPos,
+                    playerObj.playerShipsManager.getShipInfoByType(shipType).isVertical,
+                    true,
+                );
+
+                domDisplay().insertDomEle(mapShipsOverlay, shipOverlaySvg);
+            });
+        }
+    };
+
+    const setUpGameScreenMaps = (
+        enemyPlayerObj,
+        teamPlayerObj,
+        gameTeamMapGrid,
+        gameEnemyMapGrid,
+        gameTeamMapShipsOverlay,
+        gameEnemyMapShipsOverlay,
+    ) => {
+        setUpMapCellsAndShipsOverlay(teamPlayerObj, gameTeamMapGrid, gameTeamMapShipsOverlay);
+        setUpMapCellsAndShipsOverlay(enemyPlayerObj, gameEnemyMapGrid, gameEnemyMapShipsOverlay);
+    };
 
     return {
-        prepareEnemyShipsOverlay,
+        setUpEnemyFleet,
+        setUpGameScreenMaps,
     };
 };
 

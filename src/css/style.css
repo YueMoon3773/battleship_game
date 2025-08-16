@@ -943,7 +943,7 @@ body {
 
 .pTopText {
     border-right: 0.66em solid var(--primary_color);
-    animation: typing 5.5s steps(30, end), teamBlinkCaret 1600ms step-end infinite;
+    animation: typing 2.6s steps(30, end), teamBlinkCaret 1600ms step-end infinite;
 }
 
 .prepMid {

@@ -1,5 +1,13 @@
-const svgAttributesHandler = (shipSize, shipColPos = 0, shipRowPos = 0, shipIsVertical = false) => {
+const svgConfigurationHandler = (
+    shipSize,
+    shipColPos = 0,
+    shipRowPos = 0,
+    shipIsVertical = false,
+    isShipHidden = false,
+) => {
     let verticalClass = '';
+    const hiddenClass = isShipHidden === true ? 'hide' : '';
+
     let gridRow = `${shipRowPos} / ${shipRowPos + 1}`;
     let gridCol = `${shipColPos} / ${shipColPos + shipSize}`;
 
@@ -11,13 +19,14 @@ const svgAttributesHandler = (shipSize, shipColPos = 0, shipRowPos = 0, shipIsVe
 
     return {
         verticalClass,
+        hiddenClass,
         gridCol,
         gridRow,
     };
 };
 
-// const { verticalClass, gridCol, gridRow } = svgAttributesHandler(5, 1, 1, false);
-// const { verticalClass, gridCol, gridRow } = svgAttributesHandler(5, 10, 2, true);
+// const { verticalClass, gridCol, gridRow } = svgConfigurationHandler(5, 1, 1, false);
+// const { verticalClass, gridCol, gridRow } = svgConfigurationHandler(5, 10, 2, true);
 // console.log(verticalClass);
 // console.log(gridCol);
 // console.log(gridRow);
@@ -30,13 +39,14 @@ const shipsSvgOverlay = () => {
      * @param {boolean} shipIsVertical - is ship in vertical state
      * @returns svg element to insertAdjacentHTML
      */
-    const carrierImg = (shipColPos = 0, shipRowPos = 0, shipIsVertical = false) => {
+    const carrierImg = (shipColPos = 0, shipRowPos = 0, shipIsVertical = false, isShipHidden = false) => {
         const shipSize = 5;
-        const { verticalClass, gridCol, gridRow } = svgAttributesHandler(
+        const { verticalClass, hiddenClass, gridCol, gridRow } = svgConfigurationHandler(
             shipSize,
             shipColPos,
             shipRowPos,
             shipIsVertical,
+            isShipHidden,
         );
         // console.log(verticalClass);
         // console.log(gridCol);
@@ -50,7 +60,7 @@ const shipsSvgOverlay = () => {
             height="95.000000pt"
             viewBox="0 0 299.000000 95.000000"
             preserveAspectRatio="none"
-            class="shipOverlay carrierImg ${verticalClass}"
+            class="shipOverlay carrierImg ${verticalClass} ${hiddenClass}"
             style="grid-column: ${gridCol}; grid-row: ${gridRow};"
         >
             <metadata>
@@ -70,13 +80,14 @@ const shipsSvgOverlay = () => {
         return svgElement;
     };
 
-    const battleshipImg = (shipColPos = 0, shipRowPos = 0, shipIsVertical = false) => {
+    const battleshipImg = (shipColPos = 0, shipRowPos = 0, shipIsVertical = false, isShipHidden = false) => {
         const shipSize = 4;
-        const { verticalClass, gridCol, gridRow } = svgAttributesHandler(
+        const { verticalClass, hiddenClass, gridCol, gridRow } = svgConfigurationHandler(
             shipSize,
             shipColPos,
             shipRowPos,
             shipIsVertical,
+            isShipHidden,
         );
         const svgElement = `
         <svg
@@ -86,7 +97,7 @@ const shipsSvgOverlay = () => {
             height="95.000000pt"
             viewBox="0 0 299.000000 95.000000"
             preserveAspectRatio="none"
-            class="shipOverlay battleshipImg ${verticalClass}"
+            class="shipOverlay battleshipImg ${verticalClass} ${hiddenClass}"
             style="grid-column: ${gridCol}; grid-row: ${gridRow};"
         >
             <metadata>
@@ -101,13 +112,14 @@ const shipsSvgOverlay = () => {
         return svgElement;
     };
 
-    const destroyerImg = (shipColPos = 0, shipRowPos = 0, shipIsVertical = false) => {
+    const destroyerImg = (shipColPos = 0, shipRowPos = 0, shipIsVertical = false, isShipHidden = false) => {
         const shipSize = 3;
-        const { verticalClass, gridCol, gridRow } = svgAttributesHandler(
+        const { verticalClass, hiddenClass, gridCol, gridRow } = svgConfigurationHandler(
             shipSize,
             shipColPos,
             shipRowPos,
             shipIsVertical,
+            isShipHidden,
         );
         const svgElement = `
         <svg
@@ -117,7 +129,7 @@ const shipsSvgOverlay = () => {
             height="69.000000pt"
             viewBox="0 0 153.000000 69.000000"
             preserveAspectRatio="none"
-            class="shipOverlay destroyerImg ${verticalClass}"
+            class="shipOverlay destroyerImg ${verticalClass} ${hiddenClass}"
             style="grid-column: ${gridCol}; grid-row: ${gridRow};"
         >
             <metadata>
@@ -137,13 +149,14 @@ const shipsSvgOverlay = () => {
         return svgElement;
     };
 
-    const submarineImg = (shipColPos = 0, shipRowPos = 0, shipIsVertical = false) => {
+    const submarineImg = (shipColPos = 0, shipRowPos = 0, shipIsVertical = false, isShipHidden = false) => {
         const shipSize = 3;
-        const { verticalClass, gridCol, gridRow } = svgAttributesHandler(
+        const { verticalClass, hiddenClass, gridCol, gridRow } = svgConfigurationHandler(
             shipSize,
             shipColPos,
             shipRowPos,
             shipIsVertical,
+            isShipHidden,
         );
         const svgElement = `
         <svg
@@ -153,7 +166,7 @@ const shipsSvgOverlay = () => {
             height="98.000000pt"
             viewBox="0 0 302.000000 98.000000"
             preserveAspectRatio="none"
-            class="shipOverlay submarineImg ${verticalClass}"
+            class="shipOverlay submarineImg ${verticalClass} ${hiddenClass}"
             style="grid-column: ${gridCol}; grid-row: ${gridRow};"
         >
             <metadata>
@@ -173,13 +186,14 @@ const shipsSvgOverlay = () => {
         return svgElement;
     };
 
-    const cruiserImg = (shipColPos = 0, shipRowPos = 0, shipIsVertical = false) => {
+    const cruiserImg = (shipColPos = 0, shipRowPos = 0, shipIsVertical = false, isShipHidden = false) => {
         const shipSize = 2;
-        const { verticalClass, gridCol, gridRow } = svgAttributesHandler(
+        const { verticalClass, hiddenClass, gridCol, gridRow } = svgConfigurationHandler(
             shipSize,
             shipColPos,
             shipRowPos,
             shipIsVertical,
+            isShipHidden,
         );
         const svgElement = `
         <svg
@@ -189,7 +203,7 @@ const shipsSvgOverlay = () => {
             height="60.000000pt"
             viewBox="0 0 112.000000 60.000000"
             preserveAspectRatio="none"
-            class="shipOverlay cruiserImg ${verticalClass}"
+            class="shipOverlay cruiserImg ${verticalClass} ${hiddenClass}"
             style="grid-column: ${gridCol}; grid-row: ${gridRow};"
         >
             <metadata>
