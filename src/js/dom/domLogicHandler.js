@@ -110,6 +110,7 @@ const domLogicHelper = () => {
     };
 
     // helper for game play
+    // moves helper
     const movesTmpVar = {
         originHitCellId: '',
         allTriedCell: [],
@@ -649,9 +650,86 @@ const gameScreenLogic = () => {
         setUpMapCellsAndShipsOverlay(enemyPlayerObj, gameEnemyMapGrid, gameEnemyMapShipsOverlay);
     };
 
+    const addDotToFiredCell = (cellId, playerSide, cellHasShip = false) => {
+        const domCell = document.querySelector(`.mapGrid.${playerSide} .mapCell[data-cell_pos="${cellId}"]`);
+        let dot = htmlElements().mapDot('blue');
+        if (cellHasShip === true) {
+            dot = htmlElements().mapDot('red');
+        }
+        domDisplay().insertDomEle(domCell, dot);
+    };
+
+    const attackCellHandler = (cellId, playerObj) => {
+        const isCellHasShip = playerObj.playerShipsManager.isHitShip(cellId);
+        addDotToFiredCell(cellId, playerObj.playerSide, isCellHasShip);
+
+        // console.log(isCellHasShip);
+
+        if (isCellHasShip === true) {
+            const checkOneShipHitCompletely = playerObj.playerShipsManager.verifyIfOneShipHitCompletely(
+                cellId,
+                Array.from(playerObj.playerMapManager.getFiredCells()),
+            );
+            console.log(checkOneShipHitCompletely);
+
+            if (checkOneShipHitCompletely.isShipCompletelyHit === true) {
+                const shipSvg = document.querySelector(
+                    `.gameScreen .mapShipsOverlay.${playerObj.playerSide} .${checkOneShipHitCompletely.shipType}Img`,
+                );
+
+                shipSvg.classList.remove('hide');
+            }
+        }
+    };
+
+    const enemyPlayLogic = (teamPlayerObj) => {
+        const randomCellIndex = Math.floor(
+            Math.random() * Array.from(teamPlayerObj.playerMapManager.getSafeCells()).length,
+        );
+
+        let attackCellId = Array.from(teamPlayerObj.playerMapManager.getSafeCells())[randomCellIndex];
+
+        if (helper.getMovesTmpVar().newPossibleCells !== '') {
+            attackCellId = helper.getMovesTmpVar().newPossibleCells;
+        }
+        console.log(attackCellId);
+        helper.processingFiredCell(attackCellId, teamPlayerObj);
+
+        attackCellHandler(attackCellId, teamPlayerObj);
+    };
+
+    const gamePlayEnemyMapCellHandler = (mapCells, enemyPlayerObj) => {
+        if (!mapCells) {
+            throw new Error('missing input parameters');
+        }
+
+        mapCells.forEach((cell) => {
+            cell.addEventListener('click', (e) => {
+                if (e.target.hasAttribute('disabled')) {
+                    return;
+                }
+                const cellId = cell.dataset.cell_pos;
+                enemyPlayerObj.playerMapManager.updateFiredCellInMap(cellId);
+                // console.log(cellId);
+
+                attackCellHandler(cellId, enemyPlayerObj);
+
+                cell.classList.add('disable');
+                cell.setAttribute('disabled', '');
+            });
+        });
+    };
+
+    const gamePlayHandler = (players, team, enemy, enemyMapCells, gameTeamChatContent, gameEnemyChatContent) => {
+        gamePlayEnemyMapCellHandler(enemyMapCells, enemy);
+    };
+
     return {
         setUpEnemyFleet,
         setUpGameScreenMaps,
+        gamePlayEnemyMapCellHandler,
+        gamePlayHandler,
+        enemyPlayLogic,
     };
 };
 

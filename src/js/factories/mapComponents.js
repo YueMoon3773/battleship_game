@@ -479,6 +479,8 @@ const shipList = () => {
         }
         const shipIndex = getShipIndexByItsCells(cellId);
         if (shipIndex === -1) {
+            console.log('asd');
+
             return;
         } else {
             const ship = getShipList()[shipIndex];

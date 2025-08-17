@@ -14,8 +14,8 @@ const playerHelper = () => {
                 'Direct hit, Captain! The enemy’s probably filing a complaint with their insurance right now.',
                 'We nailed them, Captain! And by ‘we,’ I mean you… but I’ll take some credit anyway.',
                 'That one rattled their teeth, Captain! …assuming Sinksalot has teeth.',
-                'Splash one! That hit was so good, even the fish are clapping.',
-                'Direct hit! Sinksalot probably just spit out his evil latte.',
+                'Splash one, sir! That hit was so good, even the fish are clapping.',
+                'Direct hit, sir! Sinksalot probably just spit out his evil latte.',
                 'Kaboom! They won’t be walking straight for a week. Well… sailing straight.',
                 'Enemy’s reeling, Captain! I think I even heard their ship say ‘ouch.',
                 'BOOM! Did you see that? I mean, of course you did, you shot it, but STILL!',
@@ -160,23 +160,61 @@ const playerHelper = () => {
             ],
         },
     };
+
+    const playerChatTmpIndex = {
+        team: {
+            greeting: [],
+            hitShot: [],
+            missedShot: [],
+            win: [],
+            lost: [],
+        },
+        enemy: {
+            greeting: [],
+            hitShot: [],
+            missedShot: [],
+            win: [],
+            lost: [],
+        },
+    };
+
+    const getRandomChatByCategory = (playerSide, chatCategory) => {
+        if (
+            playerChatTmpIndex[playerSide][chatCategory].length >=
+            (playerChats[playerSide][chatCategory].length / 3) * 2
+        ) {
+            playerChatTmpIndex[playerSide][chatCategory] = [];
+        }
+
+        let randomIndex = Math.floor(Math.random() * playerChats[playerSide][chatCategory].length);
+
+        while (playerChatTmpIndex[playerSide][chatCategory].includes(randomIndex)) {
+            randomIndex = Math.floor(Math.random() * playerChats[playerSide][chatCategory].length);
+        }
+        playerChatTmpIndex[playerSide][chatCategory].push(randomIndex);
+
+        return playerChats[playerSide][chatCategory][randomIndex];
+    };
+
+    return {
+        getRandomChatByCategory,
+    };
 };
 
 const playerInfo = (playerSide, name = '') => {
     const playerMapManager = mapGrid(playerSide);
     const playerShipsManager = shipList();
+    const playerChatManager = playerHelper();
 
     return {
         name,
         isActive: false,
         playerSide,
+        playerChatManager,
         playerMapManager,
         playerShipsManager,
     };
 };
-// console.log(playerInfo('enemy', 'Sinksalot'));
-// console.log(playerInfo('enemy', 'Sinksalot').playerShipsManager.getShipList());
-// console.log(playerInfo('enemy', 'Sinksalot').playerMapManager.getMap());
 
 const player = (playerSide, name = '') => {
     if (name === null || !playerSide) {
@@ -225,6 +263,7 @@ const playersManager = () => {
             return playerList[1].getPlayerInfo();
         }
     };
+
     const getTeamInfo = () => {
         return playerList[1].getPlayerInfo();
     };

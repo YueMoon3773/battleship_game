@@ -1153,7 +1153,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 2.6em;
+    gap: 6.6em;
 }
 
 .gSideWrapper,
@@ -1217,6 +1217,7 @@ body {
 
 .gameChatWrapper.enemy {
     flex-direction: row-reverse;
+    gap: 1em;
 }
 
 .chatImg {

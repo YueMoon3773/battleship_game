@@ -144,15 +144,25 @@ const players = playersManager();
 let team;
 const enemy = players.getEnemyInfo();
 
+// ===========================
+players.adUserToPlayerList('Yue');
+team = players.getTeamInfo();
+// ===========================
+
 // set up game logic
 const domStartScreenLogic = startScreenLogic();
 const domPrepScreenLogic = prepScreenLogic();
 const domGameScreenLogic = gameScreenLogic();
 
 // set up ships for enemy
+// ===========================
+domGameScreenLogic.setUpEnemyFleet(team);
+// ===========================
 domGameScreenLogic.setUpEnemyFleet(enemy);
-console.log(enemy);
-console.log(enemy.playerShipsManager.getShipList());
+// console.log(enemy);
+// console.log(enemy.playerChatManager.getRandomChatByCategory(enemy.playerSide, 'hitShot'));
+
+// console.log(enemy.playerShipsManager.getShipList());
 
 // START SCREEN
 domStartScreenLogic.startHelpBtnClickHandler(startHelpBtn, helperScreenWrapper, startHelpBox);
@@ -207,3 +217,32 @@ prepConfirmBtn.addEventListener('click', () => {
         gameEnemyMapShipsOverlay,
     );
 });
+
+// ===========================
+// console.table(players.getActivePlayerInfo());
+// console.table(team);
+// players.switchActivePlayer();
+// console.table(team);
+
+domPrepScreenLogic.hidePrepScreenAndGoToGameScreen(prepScreen, gameScreen);
+domGameScreenLogic.setUpGameScreenMaps(
+    enemy,
+    team,
+    gameTeamMapGrid,
+    gameEnemyMapGrid,
+    gameTeamMapShipsOverlay,
+    gameEnemyMapShipsOverlay,
+);
+
+const gameEnemyMapCells = document.querySelectorAll('.gameScreen .mapGrid.enemy .mapCell');
+domGameScreenLogic.gamePlayHandler(players, team, enemy, gameEnemyMapCells, gameTeamChatContent, gameEnemyChatContent);
+
+domGameScreenLogic.enemyPlayLogic(team);
+domGameScreenLogic.enemyPlayLogic(team);
+domGameScreenLogic.enemyPlayLogic(team);
+domGameScreenLogic.enemyPlayLogic(team);
+domGameScreenLogic.enemyPlayLogic(team);
+domGameScreenLogic.enemyPlayLogic(team);
+domGameScreenLogic.enemyPlayLogic(team);
+domGameScreenLogic.enemyPlayLogic(team);
+domGameScreenLogic.enemyPlayLogic(team);
