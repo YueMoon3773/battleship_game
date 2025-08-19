@@ -23,7 +23,7 @@
 
         <div class="app">
             <!-- START SCREEN SECTION  -->
-            <div class="startScreen hide">
+            <div class="startScreen">
                 <div class="startHelpBtnWrapper">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="startHelpBtnImg empty">
                         <title>How to Play</title>
@@ -393,7 +393,7 @@
             </div>
 
             <!-- GAME PLAY SCREEN SECTION  -->
-            <div class="gameScreen">
+            <div class="gameScreen hide">
                 <div class="gameWrapper">
                     <div class="gameSidesWrapper">
                         <div class="gSideWrapper team">
@@ -469,7 +469,7 @@
                         </div>
                     </div>
 
-                    <div class="gameChatWrapper team">
+                    <div class="gameChatWrapper active team">
                         <img
                             src="./img/gamePlayImgs/characters/team.png"
                             alt="Team image"
@@ -484,7 +484,6 @@
                             alt="Enemy image"
                             class="characterImg chatImg enemyCharImg"
                         />
-                        <div class="chatContentWrapper"></div>
                         <p class="chatContent enemyText">Lorem ipsum dolor sit amet, consectetur adipiscing elit,</p>
                     </div>
                 </div>
@@ -543,21 +542,28 @@
             <!-- RESULT SCREEN SECTION  -->
             <div class="resultBox hide">
                 <h1 class="resultHeading">YOU WIN</h1>
-                <div class="resultImgWrapper">
-                    <img
-                        src="./img/gamePlayImgs/characters/team.png"
-                        alt="Character image"
-                        class="resultImg characterImg teamCharImg"
-                    />
-                    <img
-                        src="./img/gamePlayImgs/characters/evilCaptain.png"
-                        alt="Character image"
-                        class="resultImg characterImg enemyCharImg hide"
-                    />
+                <div class="resultPlayerWrapper">
+                    <div class="resultImgWrapper">
+                        <img
+                            src="./img/gamePlayImgs/characters/team.png"
+                            alt="Character image"
+                            class="resultImg characterImg teamCharImg"
+                        />
+                    </div>
+                    <p class="resultText teamText">
+                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+                    </p>
                 </div>
-                <p class="resultText">
-                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-                </p>
+                <div class="resultPlayerWrapper">
+                    <div class="resultImgWrapper">
+                        <img
+                            src="./img/gamePlayImgs/characters/evilCaptain.png"
+                            alt="Character image"
+                            class="resultImg characterImg enemyCharImg"
+                        />
+                    </div>
+                    <p class="resultText enemyText">Ut enim ad minim veniam,</p>
+                </div>
                 <button class="gameBtn" data-resultBtn="replay">
                     <span class="gameBtnCorner corner top-left"></span>
                     <span class="gameBtnCorner corner top-right"></span>

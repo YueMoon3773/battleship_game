@@ -1,5 +1,3 @@
-import domDisplay from '../dom/domDisplayHandler';
-
 const htmlElements = () => {
     /**
      *

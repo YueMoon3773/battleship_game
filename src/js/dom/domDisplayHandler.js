@@ -146,6 +146,18 @@ const domDisplay = () => {
         }
     };
 
+    const addEffectToActivePlayerChat = (playerChatWrapper) => {
+        if (!playerChatWrapper.classList.contains('active')) {
+            playerChatWrapper.classList.add('active');
+        }
+    };
+
+    const removeEffectFromInactivePlayerChat = (playerChatWrapper) => {
+        if (playerChatWrapper.classList.contains('active')) {
+            playerChatWrapper.classList.remove('active');
+        }
+    };
+
     return {
         appendDomEle,
         insertDomEle,
@@ -161,6 +173,8 @@ const domDisplay = () => {
         removeCellColorEffect,
         addDisablePrepConfirmBtn,
         removeDisablePrepConfirmBtn,
+        addEffectToActivePlayerChat,
+        removeEffectFromInactivePlayerChat,
     };
 };
 

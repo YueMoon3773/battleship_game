@@ -479,8 +479,6 @@ const shipList = () => {
         }
         const shipIndex = getShipIndexByItsCells(cellId);
         if (shipIndex === -1) {
-            console.log('asd');
-
             return;
         } else {
             const ship = getShipList()[shipIndex];
@@ -517,61 +515,4 @@ const shipList = () => {
     };
 };
 
-// MAP CHECK
-// in index file
-
-// SHIP CHECK
-// const test = shipList();
-// test.createShipList();
-// console.log('before: ', test.getShipList());
-
-// test.toggleShipIsVerticalByShipType('submarine');
-// console.log('after toggle: ', test.getShipList());
-
-// console.log(test.getShipIndexInListByType('submarine'));
-// console.log(test.getShipInfoByType('submarine'));
-
-// test.updateShipCellsListByShipType('carrier', ['R,10,C,4', 'R,10,C,5', 'R,10,C,6', 'R,10,C,7', 'R,10,C,8']);
-// test.updateShipCellsListByShipType('battleship', ['R,1,C,5', 'R,1,C,6', 'R,1,C,7', 'R,10,C,8']);
-// test.updateShipCellsListByShipType('destroyer', ['R,2,C,5', 'R,2,C,6', 'R,2,C,7']);
-// test.updateShipCellsListByShipType('submarine', ['R,6,C,6', 'R,6,C,7', 'R,6,C,8']);
-// test.updateShipCellsListByShipType('cruiser', ['R,9,C,4', 'R,9,C,5']);
-
-// console.log('after: ', test.getShipList());
-// console.log(test.checkAllShipIsOnMap());
-// console.log(test.getCellsContainShips());
-
-// console.log(test.getShipIndexByItsCells('R,6,C,7'));
-
-// const firedCellsList = [
-//     'R,1,C,7',
-//     'R,10,C,4',
-//     'R,10,C,7',
-//     'R,9,C,4',
-//     'R,2,C,2',
-//     'R,8,C,5',
-//     'R,7,C,1',
-//     'R,9,C,5',
-//     'R,6,C,8',
-//     'R,1,C,5',
-//     'R,1,C,6',
-//     'R,10,C,8',
-//     'R,2,C,6',
-//     'R,2,C,5',
-//     'R,2,C,7',
-//     'R,6,C,7',
-//     'R,6,C,6',
-//     'R,10,C,5',
-//     'R,10,C,6',
-//     'R,10,C,8',
-// ];
-
-// console.log(test.verifyIfOneShipHitCompletely('R,6,C,7', firedCellsList));
-// console.log(test.verifyIfOneShipHitCompletely('R,9,C,4', firedCellsList));
-// console.log(test.verifyIfOneShipHitCompletely('R,2,C,6', firedCellsList));
-// console.log(test.verifyIfOneShipHitCompletely('R,1,C,7', firedCellsList));
-// console.log(test.verifyIfOneShipHitCompletely('R,10,C,6', firedCellsList));
-// console.log(test.verifyIfAllShipsHitCompletely());
-
-// /========================
 export { mapGrid, mapCell, shipList };

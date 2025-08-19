@@ -49,47 +49,10 @@
 
 */
 
-/*
-Write func to trans form cell col grid in svg func
-change svg vertical by checking true false and add 'vertical'
-rerender map when 
-*/
-
 import '../css/style.css';
 
-// ==============================
-// import { mapGrid, mapCell } from './factories/mapComponents';
-
-// const grid = mapGrid('team');
-// grid.buildMapGrid();
-// const map = grid.getMapGrid();
-// console.log('map: ', map);
-// console.log('map cell: ', map[0][0].getCell());
-
-// console.log('safe cells list before: ', grid.getSafeCells());
-// console.log('fired cells list before: ', grid.getFiredCells());
-// grid.updateFiredCellInMap('R,1,C,2');
-// console.log('safe cells list after: ', grid.getSafeCells());
-// console.log('fired cells list after: ', grid.getFiredCells());
-
-// console.log('cell info at: ', grid.getCellInfoById('R,1,C,2'));
-// console.log('is cell on map: ', grid.isCellOnMap('R,1,C,11'));
-
-// console.log('horizontal test1');
-// console.log('ship cell on map?: ', grid.getShipHorizontalCells('R,10,C,4', 5));
-// console.log('horizontal test2');
-// console.log('ship cell on map?: ', grid.getShipHorizontalCells('R,1,C,10', 2));
-
-// console.log('vertical test1');
-// console.log('ship cell on map?: ', grid.getShipVerticalCells('R,10,C,4', 5));
-// console.log('vertical test2');
-// console.log('ship cell on map?: ', grid.getShipVerticalCells('R,1,C,6', 5));
-
-// ===========================
 import playersManager from './factories/players';
-import { mapGrid, mapCell, shipList } from './factories/mapComponents';
 import domDisplay from './dom/domDisplayHandler';
-// import { prepShipCardsDragHandler, prepMapCellsHandler, prepDirectionsBtnsClickHandler } from './dom/domLogicHandler';
 import { startScreenLogic, prepScreenLogic, gameScreenLogic } from './dom/domLogicHandler';
 
 import {
@@ -101,20 +64,9 @@ import {
     prepUserNameText,
     prepHorizontalBtn,
     prepVerticalBtn,
-    mapVisualEffect,
     prepMapGrid,
     prepMapShipsOverlay,
     prepShipCards,
-    prepCarrierShipCard,
-    prepCarrierShipCardText,
-    prepBattleshipShipCard,
-    prepBattleshipShipCardText,
-    prepDestroyerShipCard,
-    prepDestroyerShipCardText,
-    prepSubmarineShipCard,
-    prepSubmarineShipCardText,
-    prepCruiserShipCard,
-    prepCruiserShipCardText,
     prepResetBtn,
     prepConfirmBtn,
     gameScreen,
@@ -129,40 +81,22 @@ import {
     startHelpBoxCloseBtn,
     resultBox,
     resultHeading,
-    resultTeamCharImg,
-    resultEnemyCharImg,
-    resultText,
+    gameTeamChatWrapper,
+    gameEnemyChatWrapper,
+    teamResultText,
+    enemyResultText,
     resultBtn,
 } from './dom/htmlDom';
 
-import shipsOverlay from './elementsToDom/shipsOverlayElement';
-
-import htmlElements from './elementsToDom/elementAddToHtml';
-import shipsSvgOverlay from './elementsToDom/shipsOverlayElement';
-
 const players = playersManager();
 let team;
-const enemy = players.getEnemyInfo();
-
-// ===========================
-players.adUserToPlayerList('Yue');
-team = players.getTeamInfo();
-// ===========================
+let enemy;
+enemy = players.getEnemyInfo();
 
 // set up game logic
 const domStartScreenLogic = startScreenLogic();
 const domPrepScreenLogic = prepScreenLogic();
 const domGameScreenLogic = gameScreenLogic();
-
-// set up ships for enemy
-// ===========================
-domGameScreenLogic.setUpEnemyFleet(team);
-// ===========================
-domGameScreenLogic.setUpEnemyFleet(enemy);
-// console.log(enemy);
-// console.log(enemy.playerChatManager.getRandomChatByCategory(enemy.playerSide, 'hitShot'));
-
-// console.log(enemy.playerShipsManager.getShipList());
 
 // START SCREEN
 domStartScreenLogic.startHelpBtnClickHandler(startHelpBtn, helperScreenWrapper, startHelpBox);
@@ -170,6 +104,9 @@ domStartScreenLogic.closeHelpBoxBtnHandler(startHelpBoxCloseBtn, helperScreenWra
 
 // start game btn => change to prep screen + set up prep screen
 startBtn.addEventListener('click', () => {
+    // set up ships for enemy
+    domGameScreenLogic.setUpEnemyFleet(enemy);
+
     const playerName = domStartScreenLogic.getPlayerNameAndGoToPrepScreen(
         startInp,
         startScreen,
@@ -200,13 +137,23 @@ startBtn.addEventListener('click', () => {
 });
 
 prepResetBtn.addEventListener('click', () => {
-    domPrepScreenLogic.prepResetBtnHandler(prepShipCards, prepMapShipsOverlay, prepConfirmBtn, team);
+    domPrepScreenLogic.prepResetBtnHandler(
+        prepShipCards,
+        prepMapShipsOverlay,
+        prepConfirmBtn,
+        prepVerticalBtn,
+        prepHorizontalBtn,
+        team,
+    );
 });
 
 prepConfirmBtn.addEventListener('click', () => {
-    // console.log(team.playerShipsManager.getShipList());
+    console.log(team.playerShipsManager.getShipList());
+    // console.log(team.playerShipsManager.getCellsContainShips());
+    console.log(enemy.playerShipsManager.getShipList());
     // console.log(team.playerShipsManager.getCellsContainShips());
 
+    // hide prep screen and go to game screen.
     domPrepScreenLogic.hidePrepScreenAndGoToGameScreen(prepScreen, gameScreen);
     domGameScreenLogic.setUpGameScreenMaps(
         enemy,
@@ -216,33 +163,56 @@ prepConfirmBtn.addEventListener('click', () => {
         gameTeamMapShipsOverlay,
         gameEnemyMapShipsOverlay,
     );
+
+    // display greeting message for both players
+    domGameScreenLogic.playerChatContentAndEffectHandler(
+        gameTeamChatWrapper,
+        gameTeamChatContent,
+        team.playerSide,
+        team.playerChatManager.getRandomChatByCategory(team.playerSide, 'greeting'),
+        true,
+    );
+    domGameScreenLogic.playerChatContentAndEffectHandler(
+        gameEnemyChatWrapper,
+        gameEnemyChatContent,
+        enemy.playerSide,
+        enemy.playerChatManager.getRandomChatByCategory(enemy.playerSide, 'greeting'),
+        true,
+    );
+
+    // Handle game play
+    const gameEnemyMapCells = document.querySelectorAll('.gameScreen .mapGrid.enemy .mapCell');
+    domGameScreenLogic.gamePlayHandler(
+        players,
+        team,
+        enemy,
+        gameEnemyMapCells,
+        gameTeamChatWrapper,
+        gameTeamChatContent,
+        gameEnemyChatWrapper,
+        gameEnemyChatContent,
+        helperScreenWrapper,
+        resultBox,
+        resultHeading,
+        teamResultText,
+        enemyResultText,
+    );
 });
 
-// ===========================
-// console.table(players.getActivePlayerInfo());
-// console.table(team);
-// players.switchActivePlayer();
-// console.table(team);
+resultBtn.addEventListener('click', () => {
+    domPrepScreenLogic.resetPrepScreen(
+        prepShipCards,
+        prepMapShipsOverlay,
+        prepConfirmBtn,
+        prepVerticalBtn,
+        prepHorizontalBtn,
+    );
+    domGameScreenLogic.hideResultBox(helperScreenWrapper, resultBox);
+    domDisplay().hideDomElement(gameScreen);
+    domDisplay().unhideDomElement(startScreen);
 
-domPrepScreenLogic.hidePrepScreenAndGoToGameScreen(prepScreen, gameScreen);
-domGameScreenLogic.setUpGameScreenMaps(
-    enemy,
-    team,
-    gameTeamMapGrid,
-    gameEnemyMapGrid,
-    gameTeamMapShipsOverlay,
-    gameEnemyMapShipsOverlay,
-);
-
-const gameEnemyMapCells = document.querySelectorAll('.gameScreen .mapGrid.enemy .mapCell');
-domGameScreenLogic.gamePlayHandler(players, team, enemy, gameEnemyMapCells, gameTeamChatContent, gameEnemyChatContent);
-
-domGameScreenLogic.enemyPlayLogic(team);
-domGameScreenLogic.enemyPlayLogic(team);
-domGameScreenLogic.enemyPlayLogic(team);
-domGameScreenLogic.enemyPlayLogic(team);
-domGameScreenLogic.enemyPlayLogic(team);
-domGameScreenLogic.enemyPlayLogic(team);
-domGameScreenLogic.enemyPlayLogic(team);
-domGameScreenLogic.enemyPlayLogic(team);
-domGameScreenLogic.enemyPlayLogic(team);
+    team = null;
+    enemy = null;
+    players.resetPlayerList();
+    enemy = players.getEnemyInfo();
+});

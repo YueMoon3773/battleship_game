@@ -8,7 +8,7 @@ const playerHelper = () => {
                 'Everything’s prepped, captain! If we lose, it’ll definitely because of bad luck—not me',
                 'All systems are green, captain! …Well, except the coffee machine, but we’ll survive.',
                 'Good news: all systems are online. The bad news: crew’s betting on how long we last. No pressure, Captain.',
-                'Engines are humming, cannons are purring, and the crew is pretending to know what they’re doing. We’re set, Captain!',
+                'Engines humming, cannons purring, crew pretending they know what they’re doing. Ready, Captain!',
             ],
             hitShot: [
                 'Direct hit, Captain! The enemy’s probably filing a complaint with their insurance right now.',
@@ -85,7 +85,7 @@ const playerHelper = () => {
                 'So, you’re the so-called hero? Adorable. I’m Sinksalot, destroyer of ships and diets!',
                 'You dare face Sinksalot? Oh, this is going to be hilariously one-sided!',
                 'The ocean belongs to me, Sinksalot! …Well, except that part over there, rented by dolphins.',
-                'Sinksalot’s arrived. So! You think you’re a captain? Ha! More like a snack-sized sailor for my sharks.',
+                'Sinksalot’s arrived. You think you’re a captain? Ha! More like a snack-sized for my sharks.',
             ],
             hitShot: [
                 'Ha! Bullseye! Did that sting, cupcake?',
@@ -225,7 +225,6 @@ const player = (playerSide, name = '') => {
     }
 
     const info = playerInfo(playerSide, name);
-    // console.log(typeof info.playerShipsManager.getShipList());
 
     const togglePlayerIsActive = () => {
         getPlayerInfo().isActive = !info.isActive;
@@ -244,6 +243,12 @@ const player = (playerSide, name = '') => {
 const playersManager = () => {
     const playerList = [player('enemy', 'Sinksalot')];
 
+    const resetPlayerList = () => {
+        playerList.pop();
+        playerList.pop();
+        playerList.push(player('enemy', 'Sinksalot'));
+    };
+
     const adUserToPlayerList = (newName = '') => {
         const userPlayer = player('team', newName);
         userPlayer.togglePlayerIsActive();
@@ -257,7 +262,14 @@ const playersManager = () => {
 
     const getPlayerList = () => playerList;
     const getActivePlayerInfo = () => {
-        if (playerList[0].getPlayerActiveState()) {
+        if (playerList[0].getPlayerActiveState() === true) {
+            return playerList[0].getPlayerInfo();
+        } else {
+            return playerList[1].getPlayerInfo();
+        }
+    };
+    const getInactivePlayerInfo = () => {
+        if (playerList[0].getPlayerActiveState() === false) {
             return playerList[0].getPlayerInfo();
         } else {
             return playerList[1].getPlayerInfo();
@@ -273,10 +285,12 @@ const playersManager = () => {
     };
 
     return {
+        resetPlayerList,
         adUserToPlayerList,
         switchActivePlayer,
         getPlayerList,
         getActivePlayerInfo,
+        getInactivePlayerInfo,
         getTeamInfo,
         getEnemyInfo,
     };
@@ -284,10 +298,3 @@ const playersManager = () => {
 
 export default playersManager;
 
-// const players = playersManager();
-// players.adUserToPlayerList('yue');
-// console.log(players.getPlayerList()[0].getPlayerInfo());
-// console.log(players.getPlayerList()[1].getPlayerInfo());
-// console.log(players.getActivePlayerInfo());
-// players.switchActivePlayer();
-// console.log(players.getActivePlayerInfo());

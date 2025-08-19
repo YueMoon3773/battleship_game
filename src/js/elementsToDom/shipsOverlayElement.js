@@ -25,12 +25,6 @@ const svgConfigurationHandler = (
     };
 };
 
-// const { verticalClass, gridCol, gridRow } = svgConfigurationHandler(5, 1, 1, false);
-// const { verticalClass, gridCol, gridRow } = svgConfigurationHandler(5, 10, 2, true);
-// console.log(verticalClass);
-// console.log(gridCol);
-// console.log(gridRow);
-
 const shipsSvgOverlay = () => {
     /**
      *

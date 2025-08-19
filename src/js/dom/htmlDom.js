@@ -36,7 +36,9 @@ export const gameTeamMapShipsOverlay = document.querySelector('.mapShipsOverlay.
 export const gameEnemyMapGrid = document.querySelector('.mapGrid.enemy');
 export const gameEnemyMapShipsOverlay = document.querySelector('.mapShipsOverlay.enemy');
 
+export const gameTeamChatWrapper = document.querySelector('.gameChatWrapper.team');
 export const gameTeamChatContent = document.querySelector('.chatContent.teamText');
+export const gameEnemyChatWrapper = document.querySelector('.gameChatWrapper.enemy');
 export const gameEnemyChatContent = document.querySelector('.chatContent.enemyText');
 
 // START HELPER SCREEN ELEMENTS
@@ -47,7 +49,6 @@ export const startHelpBoxCloseBtn = document.querySelector('.startHelpBoxCloseWr
 // RESULT SCREEN ELEMENTS
 export const resultBox = document.querySelector('.resultBox');
 export const resultHeading = document.querySelector('.resultHeading');
-export const resultTeamCharImg = document.querySelector('.teamCharImg');
-export const resultEnemyCharImg = document.querySelector('.enemyCharImg');
-export const resultText = document.querySelector('.resultText');
+export const teamResultText = document.querySelector('.resultText.teamText');
+export const enemyResultText = document.querySelector('.resultText.enemyText');
 export const resultBtn = document.querySelector('.gameBtn[data-resultBtn="replay"]');

@@ -2,8 +2,6 @@ import htmlElements from '../elementsToDom/elementAddToHtml';
 import shipsSvgOverlay from '../elementsToDom/shipsOverlayElement';
 import domDisplay from './domDisplayHandler';
 
-import playersManager from '../factories/players';
-
 const domLogicHelper = () => {
     // Helper for prep screen + placing ships
     const tmpVar = {
@@ -136,9 +134,6 @@ const domLogicHelper = () => {
         movesTmpVar.oneDirectionPossibleCells = [];
         movesTmpVar.oldAttackDirection = '';
         movesTmpVar.currentAttackDirection = '';
-        movesTmpVar.newPossibleCells = '';
-    };
-    const resetNewMovesVar = () => {
         movesTmpVar.newPossibleCells = '';
     };
 
@@ -325,59 +320,6 @@ const domLogicHelper = () => {
     };
 };
 
-// const players = playersManager();
-// const enemy = players.getEnemyInfo();
-// console.log(enemy);
-//horizontal ship
-// enemy.playerShipsManager.updateShipCellsListByShipType('carrier', [
-//     'R,1,C,4',
-//     'R,1,C,5',
-//     'R,1,C,6',
-//     'R,1,C,7',
-//     'R,1,C,8',
-// ]);
-
-// vertical ship
-// enemy.playerShipsManager.updateShipCellsListByShipType('battleship', ['R,1,C,10', 'R,2,C,10', 'R,3,C,10', 'R,4,C,10']);
-// enemy.playerShipsManager.updateShipCellsListByShipType('destroyer', ['R,2,C,5', 'R,2,C,6', 'R,2,C,7']);
-// enemy.playerShipsManager.updateShipCellsListByShipType('submarine', ['R,6,C,6', 'R,6,C,7', 'R,6,C,8']);
-// enemy.playerShipsManager.updateShipCellsListByShipType('cruiser', ['R,9,C,4', 'R,9,C,5']);
-
-// horizontal fired cell
-// enemy.playerMapManager.updateFiredCellInMap('R,6,C,5');
-// enemy.playerMapManager.updateFiredCellInMap('R,6,C,7');
-// vertical fired cell
-// enemy.playerMapManager.updateFiredCellInMap('R,5,C,6');
-// enemy.playerMapManager.updateFiredCellInMap('R,7,C,6');
-
-// const test = domLogicHelper();
-// console.log(enemy.playerMapManager.getFiredCells());
-
-// let i = 1;
-// const testProcessingHit = (cellId = '') => {
-//     console.log(`${i} shot`);
-//     if (cellId !== '') {
-//         test.processingFiredCell(cellId, enemy);
-//     } else {
-//         test.processingFiredCell(test.getMovesTmpVar().newPossibleCells, enemy);
-//     }
-//     console.table(test.getMovesTmpVar());
-//     // console.log(enemy.playerMapManager.getFiredCells());
-//     i++;
-// };
-// console.log(1);
-
-// testProcessingHit('R,9,C,9');
-// testProcessingHit('R,4,C,10');
-// testProcessingHit();
-// testProcessingHit();
-// testProcessingHit();
-// testProcessingHit();
-// testProcessingHit();
-// testProcessingHit();
-// testProcessingHit();
-
-// ==============================================
 const startScreenLogic = () => {
     const startHelpBtnClickHandler = (startHelpBtn, helperScreenWrapper, startHelpBox) => {
         startHelpBtn.addEventListener('click', () => {
@@ -529,12 +471,12 @@ const prepScreenLogic = () => {
         });
     };
 
-    const prepResetBtnHandler = (shipCards, prepMapShipsOverlay, prepConfirmBtn, teamPlayerObj) => {
+    const resetPrepScreen = (shipCards, prepMapShipsOverlay, prepConfirmBtn, prepVerticalBtn, prepHorizontalBtn) => {
         prepMapShipsOverlay.innerHTML = '';
         prepConfirmBtn.setAttribute('disabled', '');
         domDisplay().addDisablePrepConfirmBtn(prepConfirmBtn);
+        domDisplay().changeActivePrepDirectionBtns(prepVerticalBtn, prepHorizontalBtn);
         helper.resetTmpVar();
-        teamPlayerObj.playerShipsManager.resetShipList();
 
         shipCards.forEach((shipCard) => {
             shipCard.setAttribute('draggable', 'true');
@@ -542,7 +484,20 @@ const prepScreenLogic = () => {
         });
     };
 
+    const prepResetBtnHandler = (
+        shipCards,
+        prepMapShipsOverlay,
+        prepConfirmBtn,
+        prepVerticalBtn,
+        prepHorizontalBtn,
+        teamPlayerObj,
+    ) => {
+        resetPrepScreen(shipCards, prepMapShipsOverlay, prepConfirmBtn, prepVerticalBtn, prepHorizontalBtn);
+        teamPlayerObj.playerShipsManager.resetShipList();
+    };
+
     const hidePrepScreenAndGoToGameScreen = (prepScreen, gameScreen) => {
+        helper.resetTmpVar();
         domDisplay().hideDomElement(prepScreen);
         domDisplay().unhideDomElement(gameScreen);
     };
@@ -552,6 +507,7 @@ const prepScreenLogic = () => {
         isPrepVerticalBtnActive,
         prepShipCardsDragHandler,
         prepMapCellsHandler,
+        resetPrepScreen,
         prepResetBtnHandler,
         hidePrepScreenAndGoToGameScreen,
     };
@@ -609,6 +565,7 @@ const gameScreenLogic = () => {
         if (playerObj.playerSide === 'team') {
             domDisplay().renderMapCells(mapGrid, playerObj.playerMapManager.getMapGrid(), true);
 
+            mapShipsOverlay.innerHTML = '';
             playerObj.playerShipsManager.getShipList().forEach((ship) => {
                 const shipType = ship.shipType;
 
@@ -623,6 +580,7 @@ const gameScreenLogic = () => {
         } else {
             domDisplay().renderMapCells(mapGrid, playerObj.playerMapManager.getMapGrid());
 
+            mapShipsOverlay.innerHTML = '';
             playerObj.playerShipsManager.getShipList().forEach((ship) => {
                 const shipType = ship.shipType;
 
@@ -659,8 +617,21 @@ const gameScreenLogic = () => {
         domDisplay().insertDomEle(domCell, dot);
     };
 
+    const displayResultBox = (helperScreenWrapper, resultBox) => {
+        helper.resetAllMovesTmpVar();
+        helper.resetTmpVar();
+        domDisplay().unhideDomElement(helperScreenWrapper);
+        domDisplay().unhideDomElement(resultBox);
+    };
+
+    const hideResultBox = (helperScreenWrapper, resultBox) => {
+        domDisplay().hideDomElement(helperScreenWrapper);
+        domDisplay().hideDomElement(resultBox);
+    };
+
     const attackCellHandler = (cellId, playerObj) => {
         const isCellHasShip = playerObj.playerShipsManager.isHitShip(cellId);
+
         addDotToFiredCell(cellId, playerObj.playerSide, isCellHasShip);
 
         // console.log(isCellHasShip);
@@ -670,7 +641,7 @@ const gameScreenLogic = () => {
                 cellId,
                 Array.from(playerObj.playerMapManager.getFiredCells()),
             );
-            console.log(checkOneShipHitCompletely);
+            // console.log(checkOneShipHitCompletely);
 
             if (checkOneShipHitCompletely.isShipCompletelyHit === true) {
                 const shipSvg = document.querySelector(
@@ -682,54 +653,212 @@ const gameScreenLogic = () => {
         }
     };
 
-    const enemyPlayLogic = (teamPlayerObj) => {
+    const enemyPlayLogic = (
+        playersObj,
+        teamPlayerObj,
+        enemyPlayerObj,
+        gameTeamChatWrapper,
+        gameTeamChatContent,
+        gameEnemyChatWrapper,
+        gameEnemyChatContent,
+        helperScreenWrapper,
+        resultBox,
+        resultHeading,
+        teamResultText,
+        enemyResultText,
+    ) => {
+        if (enemyPlayerObj.isActive === false) {
+            return;
+        }
         const randomCellIndex = Math.floor(
             Math.random() * Array.from(teamPlayerObj.playerMapManager.getSafeCells()).length,
         );
 
         let attackCellId = Array.from(teamPlayerObj.playerMapManager.getSafeCells())[randomCellIndex];
 
-        if (helper.getMovesTmpVar().newPossibleCells !== '') {
+        if (helper.getMovesTmpVar().newPossibleCells !== '' && helper.getMovesTmpVar().newPossibleCells !== undefined) {
             attackCellId = helper.getMovesTmpVar().newPossibleCells;
         }
-        console.log(attackCellId);
+        // console.log(attackCellId);
+        const isCellHasShip = teamPlayerObj.playerShipsManager.isHitShip(attackCellId);
+        // console.log({ attackCellId, teamPlayerObj });
+
         helper.processingFiredCell(attackCellId, teamPlayerObj);
 
         attackCellHandler(attackCellId, teamPlayerObj);
+
+        playerChatContentAndEffectHandler(gameTeamChatWrapper, gameTeamChatContent, 'team', '......', false);
+
+        if (isCellHasShip === true) {
+            playerChatContentAndEffectHandler(
+                gameEnemyChatWrapper,
+                gameEnemyChatContent,
+                'enemy',
+                enemyPlayerObj.playerChatManager.getRandomChatByCategory('enemy', 'hitShot'),
+                true,
+            );
+        } else {
+            playerChatContentAndEffectHandler(
+                gameEnemyChatWrapper,
+                gameEnemyChatContent,
+                'enemy',
+                enemyPlayerObj.playerChatManager.getRandomChatByCategory('enemy', 'missedShot'),
+                true,
+            );
+        }
+
+        if (teamPlayerObj.playerShipsManager.verifyIfAllShipsHitCompletely() === true) {
+            resultHeading.innerText = 'YOU LOST';
+            teamResultText.innerText = teamPlayerObj.playerChatManager.getRandomChatByCategory('team', 'lost');
+            enemyResultText.innerText = enemyPlayerObj.playerChatManager.getRandomChatByCategory('enemy', 'win');
+            displayResultBox(helperScreenWrapper, resultBox);
+            return;
+        } else {
+            playersObj.switchActivePlayer();
+        }
     };
 
-    const gamePlayEnemyMapCellHandler = (mapCells, enemyPlayerObj) => {
+    const gamePlayOnEnemyMapCellHandler = (
+        playersObj,
+        enemyPlayerObj,
+        teamPlayerObj,
+        mapCells,
+        gameTeamChatWrapper,
+        gameTeamChatContent,
+        gameEnemyChatWrapper,
+        gameEnemyChatContent,
+        helperScreenWrapper,
+        resultBox,
+        resultHeading,
+        teamResultText,
+        enemyResultText,
+    ) => {
         if (!mapCells) {
             throw new Error('missing input parameters');
         }
 
         mapCells.forEach((cell) => {
             cell.addEventListener('click', (e) => {
-                if (e.target.hasAttribute('disabled')) {
+                if (e.target.hasAttribute('disabled') || teamPlayerObj.isActive === false) {
                     return;
                 }
                 const cellId = cell.dataset.cell_pos;
+                const isCellHasShip = enemyPlayerObj.playerShipsManager.isHitShip(cellId);
                 enemyPlayerObj.playerMapManager.updateFiredCellInMap(cellId);
                 // console.log(cellId);
 
                 attackCellHandler(cellId, enemyPlayerObj);
 
+                playerChatContentAndEffectHandler(gameEnemyChatWrapper, gameEnemyChatContent, 'enemy', '......', false);
+
+                if (isCellHasShip === true) {
+                    playerChatContentAndEffectHandler(
+                        gameTeamChatWrapper,
+                        gameTeamChatContent,
+                        'team',
+                        teamPlayerObj.playerChatManager.getRandomChatByCategory('team', 'hitShot'),
+                        true,
+                    );
+                } else {
+                    playerChatContentAndEffectHandler(
+                        gameTeamChatWrapper,
+                        gameTeamChatContent,
+                        'team',
+                        teamPlayerObj.playerChatManager.getRandomChatByCategory('team', 'missedShot'),
+                        true,
+                    );
+                }
+
                 cell.classList.add('disable');
                 cell.setAttribute('disabled', '');
+
+                if (enemyPlayerObj.playerShipsManager.verifyIfAllShipsHitCompletely() === true) {
+                    resultHeading.innerText = 'YOU WIN';
+                    teamResultText.innerText = teamPlayerObj.playerChatManager.getRandomChatByCategory('team', 'win');
+                    enemyResultText.innerText = enemyPlayerObj.playerChatManager.getRandomChatByCategory(
+                        'enemy',
+                        'lost',
+                    );
+                    displayResultBox(helperScreenWrapper, resultBox);
+                    return;
+                } else {
+                    playersObj.switchActivePlayer();
+                    setTimeout(() => {
+                        enemyPlayLogic(
+                            playersObj,
+                            teamPlayerObj,
+                            enemyPlayerObj,
+                            gameTeamChatWrapper,
+                            gameTeamChatContent,
+                            gameEnemyChatWrapper,
+                            gameEnemyChatContent,
+                            helperScreenWrapper,
+                            resultBox,
+                            resultHeading,
+                            teamResultText,
+                            enemyResultText,
+                        );
+                    }, 5600);
+                }
             });
         });
     };
 
-    const gamePlayHandler = (players, team, enemy, enemyMapCells, gameTeamChatContent, gameEnemyChatContent) => {
-        gamePlayEnemyMapCellHandler(enemyMapCells, enemy);
+    const playerChatContentAndEffectHandler = (
+        chatWrapperElement,
+        chatContentElement,
+        playerSide,
+        chatContent,
+        isPlayerActive,
+    ) => {
+        if (isPlayerActive === false) {
+            domDisplay().removeEffectFromInactivePlayerChat(chatWrapperElement);
+        } else {
+            domDisplay().addEffectToActivePlayerChat(chatWrapperElement);
+        }
+        chatContentElement.innerText = '';
+        chatContentElement.innerText = chatContent;
+        chatContentElement.style.animation = `typing 2s steps(30, end), ${playerSide}BlinkCaret 1600ms step-end infinite`;
+    };
+
+    const gamePlayHandler = (
+        players,
+        team,
+        enemy,
+        enemyMapCells,
+        gameTeamChatWrapper,
+        gameTeamChatContent,
+        gameEnemyChatWrapper,
+        gameEnemyChatContent,
+        helperScreenWrapper,
+        resultBox,
+        resultHeading,
+        teamResultText,
+        enemyResultText,
+    ) => {
+        gamePlayOnEnemyMapCellHandler(
+            players,
+            enemy,
+            team,
+            enemyMapCells,
+            gameTeamChatWrapper,
+            gameTeamChatContent,
+            gameEnemyChatWrapper,
+            gameEnemyChatContent,
+            helperScreenWrapper,
+            resultBox,
+            resultHeading,
+            teamResultText,
+            enemyResultText,
+        );
     };
 
     return {
         setUpEnemyFleet,
         setUpGameScreenMaps,
-        gamePlayEnemyMapCellHandler,
         gamePlayHandler,
-        enemyPlayLogic,
+        playerChatContentAndEffectHandler,
+        hideResultBox,
     };
 };
 
