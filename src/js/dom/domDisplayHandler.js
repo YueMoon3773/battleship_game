@@ -158,6 +158,18 @@ const domDisplay = () => {
         }
     };
 
+    const addEffectToActivePlayerGamePlayMapWrapper = (playerGamePlayMapWrapper) => {
+        if (!playerGamePlayMapWrapper.classList.contains('active')) {
+            playerGamePlayMapWrapper.classList.add('active');
+        }
+    };
+
+    const removeEffectFromInactivePlayerGamePlayMapWrapper = (playerGamePlayMapWrapper) => {
+        if (playerGamePlayMapWrapper.classList.contains('active')) {
+            playerGamePlayMapWrapper.classList.remove('active');
+        }
+    };
+
     return {
         appendDomEle,
         insertDomEle,
@@ -175,6 +187,8 @@ const domDisplay = () => {
         removeDisablePrepConfirmBtn,
         addEffectToActivePlayerChat,
         removeEffectFromInactivePlayerChat,
+        addEffectToActivePlayerGamePlayMapWrapper,
+        removeEffectFromInactivePlayerGamePlayMapWrapper,
     };
 };
 

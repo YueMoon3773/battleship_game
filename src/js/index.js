@@ -70,6 +70,8 @@ import {
     prepResetBtn,
     prepConfirmBtn,
     gameScreen,
+    gameTeamMapWrapper,
+    gameEnemyMapWrapper,
     gameTeamMapGrid,
     gameTeamMapShipsOverlay,
     gameEnemyMapGrid,
@@ -148,9 +150,9 @@ prepResetBtn.addEventListener('click', () => {
 });
 
 prepConfirmBtn.addEventListener('click', () => {
-    console.log(team.playerShipsManager.getShipList());
+    // console.log(team.playerShipsManager.getShipList());
     // console.log(team.playerShipsManager.getCellsContainShips());
-    console.log(enemy.playerShipsManager.getShipList());
+    // console.log(enemy.playerShipsManager.getShipList());
     // console.log(team.playerShipsManager.getCellsContainShips());
 
     // hide prep screen and go to game screen.
@@ -186,6 +188,8 @@ prepConfirmBtn.addEventListener('click', () => {
         players,
         team,
         enemy,
+        gameTeamMapWrapper,
+        gameEnemyMapWrapper,
         gameEnemyMapCells,
         gameTeamChatWrapper,
         gameTeamChatContent,

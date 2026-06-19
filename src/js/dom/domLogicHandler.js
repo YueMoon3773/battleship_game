@@ -657,6 +657,8 @@ const gameScreenLogic = () => {
         playersObj,
         teamPlayerObj,
         enemyPlayerObj,
+        gameTeamMapWrapper,
+        gameEnemyMapWrapper,
         gameTeamChatWrapper,
         gameTeamChatContent,
         gameEnemyChatWrapper,
@@ -670,6 +672,9 @@ const gameScreenLogic = () => {
         if (enemyPlayerObj.isActive === false) {
             return;
         }
+
+        playerActiveMapEffectHandler(gameTeamMapWrapper, true);
+
         const randomCellIndex = Math.floor(
             Math.random() * Array.from(teamPlayerObj.playerMapManager.getSafeCells()).length,
         );
@@ -714,14 +719,19 @@ const gameScreenLogic = () => {
             displayResultBox(helperScreenWrapper, resultBox);
             return;
         } else {
+            playerActiveMapEffectHandler(gameTeamMapWrapper, false);
+            playerActiveMapEffectHandler(gameEnemyMapWrapper, true);
+
             playersObj.switchActivePlayer();
         }
     };
 
-    const gamePlayOnEnemyMapCellHandler = (
+    const userPlayOnEnemyMapCellHandler = (
         playersObj,
         enemyPlayerObj,
         teamPlayerObj,
+        gameTeamMapWrapper,
+        gameEnemyMapWrapper,
         mapCells,
         gameTeamChatWrapper,
         gameTeamChatContent,
@@ -736,6 +746,8 @@ const gameScreenLogic = () => {
         if (!mapCells) {
             throw new Error('missing input parameters');
         }
+
+        playerActiveMapEffectHandler(gameEnemyMapWrapper, true);
 
         mapCells.forEach((cell) => {
             cell.addEventListener('click', (e) => {
@@ -782,12 +794,17 @@ const gameScreenLogic = () => {
                     displayResultBox(helperScreenWrapper, resultBox);
                     return;
                 } else {
+                    playerActiveMapEffectHandler(gameEnemyMapWrapper, false);
+                    playerActiveMapEffectHandler(gameTeamMapWrapper, true);
+
                     playersObj.switchActivePlayer();
                     setTimeout(() => {
                         enemyPlayLogic(
                             playersObj,
                             teamPlayerObj,
                             enemyPlayerObj,
+                            gameTeamMapWrapper,
+                            gameEnemyMapWrapper,
                             gameTeamChatWrapper,
                             gameTeamChatContent,
                             gameEnemyChatWrapper,
@@ -798,7 +815,7 @@ const gameScreenLogic = () => {
                             teamResultText,
                             enemyResultText,
                         );
-                    }, 5600);
+                    }, 4600);
                 }
             });
         });
@@ -821,10 +838,18 @@ const gameScreenLogic = () => {
         chatContentElement.style.animation = `typing 2s steps(30, end), ${playerSide}BlinkCaret 1600ms step-end infinite`;
     };
 
+    const playerActiveMapEffectHandler = (gamePlayMapWrapperElement, isPlayerActive) => {
+        if (isPlayerActive === false) {
+            domDisplay().removeEffectFromInactivePlayerGamePlayMapWrapper(gamePlayMapWrapperElement);
+        } else domDisplay().addEffectToActivePlayerGamePlayMapWrapper(gamePlayMapWrapperElement);
+    };
+
     const gamePlayHandler = (
         players,
         team,
         enemy,
+        gameTeamMapWrapper,
+        gameEnemyMapWrapper,
         enemyMapCells,
         gameTeamChatWrapper,
         gameTeamChatContent,
@@ -836,10 +861,12 @@ const gameScreenLogic = () => {
         teamResultText,
         enemyResultText,
     ) => {
-        gamePlayOnEnemyMapCellHandler(
+        userPlayOnEnemyMapCellHandler(
             players,
             enemy,
             team,
+            gameTeamMapWrapper,
+            gameEnemyMapWrapper,
             enemyMapCells,
             gameTeamChatWrapper,
             gameTeamChatContent,
@@ -859,6 +886,7 @@ const gameScreenLogic = () => {
         gamePlayHandler,
         playerChatContentAndEffectHandler,
         hideResultBox,
+        playerActiveMapEffectHandler,
     };
 };
 

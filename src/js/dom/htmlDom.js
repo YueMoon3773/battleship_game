@@ -31,6 +31,8 @@ export const prepConfirmBtn = document.querySelector('.gameBtn[data-prepBtnDirec
 // GAME PLAY ELEMENTS
 export const gameScreen = document.querySelector('.gameScreen');
 
+export const gameTeamMapWrapper = document.querySelector('.gSideWrapper.team');
+export const gameEnemyMapWrapper = document.querySelector('.gSideWrapper.enemy');
 export const gameTeamMapGrid = document.querySelector('.mapGrid.team');
 export const gameTeamMapShipsOverlay = document.querySelector('.mapShipsOverlay.team');
 export const gameEnemyMapGrid = document.querySelector('.mapGrid.enemy');
