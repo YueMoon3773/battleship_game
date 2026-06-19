@@ -948,7 +948,9 @@ body {
 .prepTop,
 .prepMid,
 .prepBot {
-    width: 100%;
+    min-width: 50%;
+    width: 70%;
+    max-width: 86%;
     font-size: 1rem;
     padding: 1.06em;
     background-color: var(--ele_black_bg_color);
@@ -969,6 +971,7 @@ body {
     align-items: center;
     justify-content: flex-start;
     gap: 2.4em;
+    overflow-y: auto;
 }
 
 .pTopImgWrapper {
@@ -995,6 +998,7 @@ body {
 }
 
 .pTopText {
+    text-wrap: pretty;
     border-right: 0.66em solid var(--primary_color);
     animation:
         typing 2.6s steps(30, end),
@@ -1073,7 +1077,8 @@ body {
 }
 
 .shipCard {
-    min-width: 96px;
+    min-width: 60px;
+    max-width: 90px;
     aspect-ratio: 1 / 1;
     background-color: var(--black_color);
     cursor: grab;
@@ -1098,6 +1103,9 @@ body {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
 }
 
 .shipCardImg {
@@ -1593,6 +1601,9 @@ body {
     .prepTop,
     .prepMid,
     .prepBot {
+        min-width: 60%;
+        width: 86%;
+        max-width: 90%;
         padding: 1.046em;
     }
 
@@ -1609,6 +1620,15 @@ body {
     .gameBtn {
         font-size: var(--fs_normal_sm);
         padding: 0.46em;
+    }
+
+    .shipCard {
+        min-width: 50px;
+        max-width: 70px;
+    }
+
+    .shipCardImg {
+        max-width: 90%;
     }
 
     .cardText,
@@ -1887,9 +1907,9 @@ body {
         padding: 0.46em;
     }
 
-    .cardText,
-    .cardTextSize {
-        font-size: calc(var(--fs_normal_4sm) * 0.2);
+    .letter,
+    .number {
+        font-size: calc(var(--fs_normal_3sm) * 0.76);
     }
 
     .prepMapWrapper {
@@ -1909,16 +1929,19 @@ body {
     }
 
     .shipCard {
-        min-width: 60px;
-        /* max-width: 26px; */
+        min-width: 46px;
+        max-width: 66px;
     }
 
     .shipCardContent .shipCardImg {
-        width: 90%;
+        max-width: 90%;
     }
 
-    .prepMapWrapper .shipCardImg {
-        width: 80%;
+    .cardText,
+    .cardTextSize {
+        /* font-size: calc(var(--fs_normal_4sm) * 0.2); */
+        font-size: var(--fs_normal_4sm);
+        font-weight: 400;
     }
 
     .prepMapWrapper .carrierImg {
@@ -2179,7 +2202,7 @@ body {
     .usrName,
     .iconPicCredit,
     .creditLink {
-        font-size: calc(var(--fs_normal_4sm) * 0.36);
+        font-size: calc(var(--fs_normal_4sm) * 0.66);
     }
 
     .gitIcon {
@@ -2203,7 +2226,7 @@ body {
     .prepTop,
     .prepMid,
     .prepBot {
-        max-width: 96%;
+        width: 96%;
         padding: 1em;
     }
 
@@ -2241,10 +2264,18 @@ body {
         padding: 0.46em;
     }
 
+    .shipCard {
+        min-width: 36px;
+        max-width: 60px;
+    }
+
+    .shipCardImg {
+        max-width: 90%;
+    }
+
     .cardText,
     .cardTextSize {
-        font-size: calc(var(--fs_normal_4sm) * 0.2);
-        font-size: 1px;
+        font-size: calc(var(--fs_normal_4sm) * 0.56);
         font-weight: 200;
     }
 
